@@ -85,13 +85,35 @@ summary::after { content: "▾"; font-size: 1.3rem; line-height: 1; transition: 
 details[open] summary::after { transform: rotate(180deg); }
 summary:hover { border-color: var(--ink); }
 summary:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
-.table-wrap { overflow-x: auto; margin-top: .75rem; background: var(--paper); border-radius: 12px; border: 1px solid var(--line); }
-table { border-collapse: collapse; width: 100%; font-size: 1rem; min-width: 560px; }
+.table-wrap {
+  overflow-x: auto; margin-top: .75rem; background: var(--paper); border-radius: 12px; border: 1px solid var(--line);
+  /* Sort de la colonne de 620px pour que le tableau tienne en entier sur ordinateur et tablette. */
+  width: min(900px, calc(100vw - 2rem)); position: relative; left: 50%; transform: translateX(-50%);
+}
+table { border-collapse: collapse; width: 100%; font-size: 1rem; }
 th, td { padding: .45rem .6rem; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
 th { font-weight: 500; }
 th.c-inf { background: var(--aqua); } th.c-pres { background: var(--green); }
 th.c-pret { background: var(--yellow); } th.c-parf { background: var(--orange); } th.c-fr { background: var(--violet); }
 tr:last-child td { border-bottom: 0; }
+/* Sur téléphone, cinq colonnes ne tiennent pas : une fiche par verbe à la place. */
+@media (max-width: 640px) {
+  .table-wrap { overflow: visible; }
+  table, tbody, td { display: block; }
+  tr:first-child { display: none; }
+  tr {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: .35rem .5rem;
+    padding: .75rem .8rem; border-bottom: 1px solid var(--line);
+  }
+  tr:last-child { border-bottom: 0; }
+  td { border: 0; padding: 0; white-space: normal; }
+  td:nth-child(1) { font-weight: 700; font-size: 1.05rem; }
+  td:nth-child(5) { grid-column: 2 / 4; grid-row: 1; text-align: right; color: var(--muted); align-self: center; }
+  td:nth-child(2), td:nth-child(3), td:nth-child(4) { font-size: .92rem; padding-left: .45rem; border-left: 4px solid; }
+  td:nth-child(2) { border-color: var(--green); }
+  td:nth-child(3) { border-color: var(--yellow); }
+  td:nth-child(4) { border-color: var(--orange); }
+}
 
 .topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
 .link { background: none; border: 0; color: var(--muted); font: inherit; cursor: pointer; padding: .3rem 0; text-decoration: underline; }
