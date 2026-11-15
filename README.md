@@ -13,6 +13,8 @@ python3 -m http.server
 
 puis ouvrir http://localhost:8000.
 
+En ligne : https://nicht.dume.me (GitHub Pages, domaine déclaré dans le fichier `CNAME`).
+
 ## Ajouter un quiz
 
 Créer un dossier (nom en ASCII, sans tréma ni ß, pour des URL propres), y mettre son `index.html` avec un lien `../` vers l'accueil, puis ajouter une carte dans la liste `.quizzes` de `index.html`.

@@ -35,7 +35,9 @@ body {
 main { max-width: 620px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
 h1 { font-size: 1.9rem; line-height: 1.2; margin: .5rem 0 .4rem; font-weight: 700; }
 h1 .hl { background: linear-gradient(transparent 55%, var(--yellow) 55%); padding: 0 .15em; }
-p.lead { color: var(--muted); margin: 0 0 1.75rem; }
+p.lead { color: var(--muted); margin: 0 0 .75rem; }
+.brand { margin: 0; font-weight: 500; font-size: .95rem; color: var(--muted); letter-spacing: .02em; }
+.pun { display: inline-block; margin: 0 0 1.75rem; padding: .3rem .75rem; border-radius: 999px; background: var(--violet); font-size: .95rem; }
 .quizzes { display: grid; gap: .75rem; list-style: none; padding: 0; margin: 0; }
 .quiz {
   display: block; padding: 1.1rem 1.2rem; border-radius: 14px; text-decoration: none;
@@ -52,8 +54,10 @@ p.lead { color: var(--muted); margin: 0 0 1.75rem; }
 </head>
 <body>
 <main>
+  <p class="brand">nicht.dume.me</p>
   <h1>Quiz <span class="hl">d’allemand</span></h1>
   <p class="lead">Des petits exercices pour réviser les leçons. Choisis un quiz.</p>
+  <p class="pun"><strong>Nicht dumm !</strong> C’est-à-dire : « pas bête ! »</p>
 
   <ul class="quizzes">
     <li>
