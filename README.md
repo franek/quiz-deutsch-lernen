@@ -1,4 +1,4 @@
-# quizz-deutsch-lernen
+# quiz-deutsch-lernen
 
 Petits quiz web pour réviser l'allemand au collège. Pages statiques (HTML, CSS et JS inline), sans build ni dépendance.
 
