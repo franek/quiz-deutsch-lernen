@@ -16,7 +16,7 @@ Le seul élément externe est la police Lexend (Google Fonts). Sans connexion, l
 
 L'élève choisit d'abord la série, puis l'exercice :
 
-- **Séries** : une par tranche de 10 verbes dans l'ordre de la fiche (1 à 10, 11 à 20… 91 à 93), toute la fiche, ou 20 verbes tirés au hasard. Le premier et le dernier verbe de la série s'affichent sous les boutons. Le dernier choix est mémorisé dans le navigateur.
+- **Séries** : une par tranche de 10 verbes dans l'ordre de la fiche (1 à 10, 11 à 20… 81 à 93 : un reste de moins de 5 verbes est rattaché à la dernière série), toute la fiche, ou 20 verbes tirés au hasard. Le premier et le dernier verbe de la série s'affichent sous les boutons. Le dernier choix est mémorisé dans le navigateur.
 - **Les trois formes** : l'infinitif et la traduction sont donnés, il faut écrire le présent (3e pers.), le prétérit et le parfait.
 - **À partir du français** : seule la traduction est donnée, il faut écrire l'infinitif et les trois formes.
 

@@ -360,8 +360,9 @@ const pron = v => v.pron || "er";
 
 // Séries : une par tranche de 10, toute la fiche, ou 20 verbes au hasard
 const SERIES = [];
-for (let s = 0; s < VERBS.length; s += 10) {
-  const e = Math.min(s + 10, VERBS.length);
+// Un reste de moins de 5 verbes est rattaché à la série précédente (ex. 81 à 93 plutôt que 91 à 93).
+for (let s = 0, e; s < VERBS.length; s = e) {
+  e = VERBS.length - (s + 10) < 5 ? VERBS.length : s + 10;
   SERIES.push({ id: "s" + s, label: `${s + 1} à ${e}`, pick: () => [...VERBS.keys()].slice(s, e),
     hint: `De <em>${VERBS[s].inf}</em> à <em>${VERBS[e - 1].inf}</em>.` });
 }
