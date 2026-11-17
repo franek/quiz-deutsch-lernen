@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vocabulaire allemand – entraînement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F4F6FA; --paper: #FFFFFF; --ink: #1E2A44; --muted: #5B6680; --line: #D6DCE8;
+  --aqua: #7FE0E6; --green: #74DB6A; --yellow: #EEF23A; --orange: #FFB43A; --violet: #DDA6F5;
+  --ok: #1F8A3B; --ko: #C2342B; --warn: #A86400; --btn: #1E2A44; --btn-ink: #FFFFFF;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141826; --paper: #1D2234; --ink: #E8ECF6; --muted: #A3ABC2; --line: #333B55;
+    --aqua: #2E8C92; --green: #3C8F36; --yellow: #8E9120; --orange: #A86A12; --violet: #7E4E96;
+    --ok: #5FD07A; --ko: #FF7A70; --warn: #F0B04A; --btn: #E8ECF6; --btn-ink: #141826;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141826; --paper: #1D2234; --ink: #E8ECF6; --muted: #A3ABC2; --line: #333B55;
+  --aqua: #2E8C92; --green: #3C8F36; --yellow: #8E9120; --orange: #A86A12; --violet: #7E4E96;
+  --ok: #5FD07A; --ko: #FF7A70; --warn: #F0B04A; --btn: #E8ECF6; --btn-ink: #141826;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: "Lexend", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 17px; line-height: 1.5;
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+}
+main { max-width: 620px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+h1 { font-size: 1.7rem; line-height: 1.2; margin: .5rem 0 .4rem; font-weight: 700; }
+h1 .hl { background: linear-gradient(transparent 55%, var(--aqua) 55%); padding: 0 .15em; }
+p.lead { color: var(--muted); margin: 0 0 1.5rem; }
+.hidden { display: none !important; }
+.link { background: none; border: 0; color: var(--muted); font: inherit; cursor: pointer; padding: .3rem 0; text-decoration: underline; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+
+.range-title { font-weight: 500; margin: 0 0 .5rem; }
+.range { display: flex; gap: .5rem; margin: 0 0 .6rem; flex-wrap: wrap; }
+.range label { cursor: pointer; position: relative; }
+.range input { position: absolute; opacity: 0; pointer-events: none; }
+.range span { display: inline-block; padding: .45rem .95rem; border-radius: 999px; border: 2px solid var(--line); background: var(--paper); font-weight: 500; }
+.range input:checked + span { background: var(--btn); color: var(--btn-ink); border-color: var(--btn); }
+.range input:focus-visible + span { outline: 3px solid var(--orange); outline-offset: 2px; }
+.range-hint { color: var(--muted); font-size: .95rem; margin: 0 0 1.25rem; min-height: 1.5em; }
+
+.modes { display: grid; gap: .75rem; }
+.mode {
+  text-align: left; width: 100%; padding: 1rem 1.1rem; border-radius: 14px;
+  border: 2px solid var(--line); background: var(--paper); color: var(--ink); font: inherit; cursor: pointer;
+}
+.mode strong { display: block; font-size: 1.1rem; }
+.mode span { color: var(--muted); font-size: .95rem; }
+.mode:hover { border-color: var(--ink); }
+
+details { margin-top: 1.75rem; }
+summary {
+  cursor: pointer; font-weight: 700; font-size: 1.1rem; list-style: none;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 1.1rem; border-radius: 14px; border: 2px solid var(--line); background: var(--paper);
+}
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "▾"; font-size: 1.3rem; line-height: 1; transition: transform .2s; }
+details[open] summary::after { transform: rotate(180deg); }
+summary:hover { border-color: var(--ink); }
+.list-theme { margin: 1.1rem 0 .4rem; font-weight: 700; }
+.list { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.list-row { display: grid; grid-template-columns: 1fr 1fr; gap: .2rem 1rem; padding: .5rem .8rem; border-bottom: 1px solid var(--line); }
+.list-row:last-child { border-bottom: 0; }
+.list-row .de { font-weight: 500; }
+.list-row .fr { color: var(--muted); }
+.list-row .note { grid-column: 1 / -1; font-size: .85rem; color: var(--warn); }
+@media (max-width: 480px) { .list-row { grid-template-columns: 1fr; } }
+
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.progress { display: flex; gap: 5px; flex-wrap: wrap; }
+.progress-text { color: var(--muted); font-weight: 500; }
+.dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--line); }
+.dot.done { background: var(--green); border-color: var(--green); }
+.dot.missed { background: var(--orange); border-color: var(--orange); }
+.dot.current { border-color: var(--ink); }
+
+.card { background: var(--paper); border-radius: 18px; padding: 1.4rem 1.2rem; border: 1px solid var(--line); }
+.prompt { margin-bottom: 1.2rem; }
+.prompt .theme { color: var(--muted); font-size: .9rem; }
+.prompt .big { font-size: 2rem; font-weight: 700; line-height: 1.15; word-break: break-word; margin-top: .15rem; }
+.prompt .sub { color: var(--muted); margin-top: .3rem; }
+
+.choices { display: grid; gap: .6rem; margin-bottom: 1.2rem; }
+.choice {
+  text-align: left; width: 100%; padding: .8rem 1rem; border-radius: 12px; font: inherit; font-size: 1.05rem;
+  border: 2px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer;
+  display: flex; gap: .7rem; align-items: baseline;
+}
+.choice .k { color: var(--muted); font-size: .85rem; min-width: 1em; }
+.choice:hover:not(:disabled) { border-color: var(--ink); }
+.choice:disabled { cursor: default; }
+.choice.right { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 14%, var(--paper)); }
+.choice.wrong { border-color: var(--ko); background: color-mix(in srgb, var(--ko) 12%, var(--paper)); }
+
+.field { margin-bottom: 1rem; }
+.field label { display: inline-block; font-weight: 500; font-size: .95rem; margin-bottom: .3rem; padding: 0 .3em; border-radius: 4px; background: var(--aqua); }
+.field input {
+  width: 100%; font: inherit; font-size: 1.2rem; color: var(--ink); background: transparent;
+  border: 0; border-bottom: 3px solid var(--line); padding: .35rem .1rem; border-radius: 0;
+}
+.field input:focus { outline: none; border-color: var(--aqua); }
+.field.ok input { border-color: var(--ok); }
+.field.ko input { border-color: var(--ko); }
+.fb { font-size: .95rem; margin-top: .3rem; }
+.field.ok .fb { color: var(--ok); }
+.field.ko .fb { color: var(--ko); }
+.fb .note, .verdict .note { color: var(--warn); display: block; font-weight: 400; font-size: .95rem; }
+
+.keys { display: flex; gap: .5rem; margin: .4rem 0 1.2rem; }
+.key {
+  font: inherit; font-size: 1.15rem; width: 48px; height: 44px; border-radius: 10px;
+  border: 2px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer;
+}
+.main-btn {
+  width: 100%; font: inherit; font-weight: 700; font-size: 1.1rem; padding: .85rem 1rem;
+  border-radius: 12px; border: 0; background: var(--btn); color: var(--btn-ink); cursor: pointer;
+}
+.verdict { font-weight: 700; margin: 0 0 1rem; font-size: 1.05rem; }
+.verdict.good { color: var(--ok); } .verdict.bad { color: var(--ko); }
+
+.result .score { font-size: 3.2rem; font-weight: 700; line-height: 1; margin: .5rem 0; }
+.result ul { padding-left: 1.2rem; }
+.result li { margin-bottom: .3rem; }
+.btns { display: grid; gap: .6rem; margin-top: 1.4rem; }
+.second-btn {
+  width: 100%; font: inherit; font-weight: 500; padding: .8rem 1rem; border-radius: 12px;
+  border: 2px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .card.shake { animation: shake .3s; }
+  @keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+}
+</style>
+<link rel="stylesheet" href="../commun/cadeau.css">
+</head>
+<body>
+<main>
+
+  <section id="home">
+    <a class="link" href="../">← Tous les quiz</a>
+    <h1>Vocabulaire <span class="hl">par thème</span></h1>
+    <p class="lead">Les mots du cahier, de la mer aux fantômes en passant par la maison. Les mots ratés reviennent à la fin jusqu’à ce que tout soit juste.</p>
+    <p class="gift-pill">🎁 Au moins 80&nbsp;% de justes du premier coup&nbsp;? <strong>Un cadeau t’attend à la fin&nbsp;!</strong></p>
+    <p class="range-title">Quel thème ?</p>
+    <div class="range" role="radiogroup" id="ranges"></div>
+    <p class="range-hint" id="range-hint"></p>
+    <div class="modes">
+      <button class="mode" data-mode="qcm">
+        <strong>De l’allemand au français</strong>
+        <span>On te donne le mot allemand, tu choisis sa traduction parmi quatre.</span>
+      </button>
+      <button class="mode" data-mode="ecrire">
+        <strong>Du français à l’allemand</strong>
+        <span>On te donne le mot français, tu l’écris en allemand, avec l’article pour les noms.</span>
+      </button>
+    </div>
+    <details>
+      <summary>Revoir la liste</summary>
+      <div id="list"></div>
+    </details>
+  </section>
+
+  <section id="quiz" class="hidden">
+    <div class="topbar">
+      <div class="progress" id="progress"></div>
+      <button class="link" id="quit">Quitter</button>
+    </div>
+    <div class="card" id="card">
+      <div class="prompt" id="prompt"></div>
+      <div id="answer"></div>
+      <p class="verdict hidden" id="verdict"></p>
+      <button class="main-btn" id="action">Vérifier</button>
+    </div>
+  </section>
+
+  <section id="result" class="hidden result">
+    <div class="card">
+      <p style="margin:0;color:var(--muted)">Justes du premier coup</p>
+      <div class="score" id="score"></div>
+      <p id="comment"></p>
+      <div id="missed"></div>
+      <div id="gift" class="gift"></div>
+      <div class="btns">
+        <button class="main-btn" id="again">Recommencer</button>
+        <button class="second-btn" id="home-btn">Changer d’exercice</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+<script src="../commun/karambolage.js"></script>
+<script src="../commun/cadeau.js"></script>
+<script>
+// Vocabulaire du cahier, rangé par thème. Pour chaque mot :
+// - de : la forme allemande, ou une liste de formes acceptées (affichées séparées par « / ») ;
+// - fr : la traduction ;
+// - pl : le pluriel, affiché à titre d'information ;
+// - note : remarque affichée après la réponse et dans la liste ;
+// - casse : true si la majuscule compte (ex. « Sie », qui veut dire autre chose que « sie »).
+const THEMES = [
+  { id: "mer", name: "🌊 Au bord de la mer", words: [
+    { de: "der Turm", fr: "la tour" },
+    { de: "der Leuchtturm", fr: "le phare" },
+    { de: "der Mond", fr: "la lune" },
+    { de: "der Felsen", fr: "le rocher" },
+    { de: ["das Meer", "die See"], fr: "la mer", note: "Attention : die See, c’est la mer, mais der See, c’est le lac." },
+    { de: "der See", fr: "le lac", note: "Attention : der See, c’est le lac, mais die See, c’est la mer." },
+    { de: "der Stein", fr: "le caillou" },
+    { de: "der Wind", fr: "le vent" },
+    { de: "der Wind heult", fr: "le vent hurle" },
+    { de: "die Möwe", pl: "die Möwen", fr: "la mouette" },
+    { de: "die Wolke", pl: "die Wolken", fr: "le nuage" },
+    { de: "es ist wolkig", fr: "il y a des nuages" }
+  ]},
+  { id: "fantomes", name: "👻 Fantômes et frissons", words: [
+    { de: "das Gespenst", pl: "die Gespenster", fr: "le fantôme" },
+    { de: "spuken", fr: "hanter", note: "Attention : spuken (hanter) ≠ spucken (cracher)." },
+    { de: ["es spukt", "es geistert"], fr: "il y a des fantômes" },
+    { de: "der Schrecken", fr: "la terreur" },
+    { de: "fürchten", fr: "craindre" },
+    { de: "drohen", fr: "menacer" },
+    { de: "erpressen", fr: "faire chanter" },
+    { de: ["erstarren", "starr werden"], fr: "se figer" },
+    { de: "kreischen", fr: "pousser des cris stridents" },
+    { de: "schreien", fr: "crier" },
+    { de: "flüstern", fr: "chuchoter" },
+    { de: "klopfen", fr: "toquer, frapper" }
+  ]},
+  { id: "maison", name: "🏠 À la maison", words: [
+    { de: "das Haus", fr: "la maison" },
+    { de: "die Wohnung", fr: "l’appartement" },
+    { de: "die Küche", fr: "la cuisine" },
+    { de: ["das Badezimmer", "das Bad"], fr: "la salle de bain" },
+    { de: ["das WC", "die Toilette"], fr: "les toilettes" },
+    { de: "der Flur", fr: "le couloir" },
+    { de: "das Treppenhaus", fr: "la cage d’escalier" },
+    { de: "das Schlafzimmer", fr: "la chambre" },
+    { de: "das Wohnzimmer", fr: "le salon" },
+    { de: "das Esszimmer", fr: "la salle à manger" },
+    { de: "der Besuch", fr: "la visite" },
+    { de: "der Staub", fr: "la poussière" },
+    { de: "Staub saugen", fr: "passer l’aspirateur" }
+  ]},
+  { id: "humeur", name: "🙂 Caractère et humeur", words: [
+    { de: "die Laune", fr: "l’humeur" },
+    { de: "meckern", fr: "ronchonner" },
+    { de: "seufzen", fr: "soupirer" },
+    { de: "jubeln", fr: "jubiler" },
+    { de: "grübeln", fr: "ruminer, se creuser la tête", note: "Dans le cahier : viel nachdenken (beaucoup réfléchir)." },
+    { de: "träumen", fr: "rêver" },
+    { de: "der Traum", fr: "le rêve" },
+    { de: "mutig", fr: "courageux" },
+    { de: "der Mut", fr: "le courage" },
+    { de: "fleißig", fr: "travailleur" },
+    { de: "ernst", fr: "sérieux" },
+    { de: "müde", fr: "fatigué" },
+    { de: "der Witz", fr: "la blague" },
+    { de: "schummeln", fr: "tricher" },
+    { de: ["spinnen", "verrückt sein"], fr: "être fou" }
+  ]},
+  { id: "aussi", name: "🧩 Et aussi…", words: [
+    { de: "zahlen", fr: "payer", note: "Attention : zahlen (payer) ≠ zählen (compter)." },
+    { de: "zählen", fr: "compter", note: "Attention : zählen (compter) ≠ zahlen (payer)." },
+    { de: "früher", fr: "avant, autrefois" },
+    { de: ["gleich", "sofort"], fr: "tout de suite" },
+    { de: "Sie", fr: "vous (forme de politesse)", casse: true, note: "Avec une majuscule : Sie, c’est « vous ». Avec une minuscule, sie veut dire « elle » ou « ils »." },
+    { de: "der Linkshänder", fr: "le gaucher" },
+    { de: "spucken", fr: "cracher", note: "Attention : spucken (cracher) ≠ spuken (hanter)." }
+  ]}
+];
+
+// Liste à plat : chaque mot garde une référence vers son thème.
+const WORDS = THEMES.flatMap(t => t.words.map(w => ({ ...w, de: [].concat(w.de), theme: t })));
+const deText = w => w.de.join(" / ");
+
+const $ = id => document.getElementById(id);
+let mode, set, queue, current, status, checked, firstTry;
+
+// Liste de révision
+$("list").innerHTML = THEMES.map(t => `
+  <p class="list-theme">${t.name}</p>
+  <div class="list">${WORDS.filter(w => w.theme === t).map(w => `
+    <div class="list-row"><span class="de">${deText(w)}${w.pl ? ` <span class="fr">(pl. ${w.pl})</span>` : ""}</span><span class="fr">${w.fr}</span>${w.note ? `<span class="note">${w.note}</span>` : ""}</div>`).join("")}
+  </div>`).join("");
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+// Séries : un thème, ou tout le vocabulaire
+const SERIES = THEMES.map(t => ({ id: t.id, label: t.name, pick: () => WORDS.flatMap((w, i) => w.theme === t ? [i] : []),
+  hint: `${t.words.length} mots.` }));
+SERIES.push({ id: "all", label: "Tout", pick: () => [...WORDS.keys()], hint: `Tout le vocabulaire : ${WORDS.length} mots.` });
+
+const RANGE_KEY = "vocabulaire-theme";
+let savedRange = null;
+try { savedRange = localStorage.getItem(RANGE_KEY); } catch (e) {}
+if (!SERIES.some(s => s.id === savedRange)) savedRange = SERIES[0].id;
+$("ranges").innerHTML = SERIES.map(s =>
+  `<label><input type="radio" name="range" value="${s.id}"${s.id === savedRange ? " checked" : ""}><span>${s.label}</span></label>`
+).join("");
+const selectedRange = () => document.querySelector('input[name="range"]:checked').value;
+function showRangeHint() { $("range-hint").textContent = SERIES.find(s => s.id === selectedRange()).hint; }
+$("ranges").addEventListener("change", () => {
+  showRangeHint();
+  try { localStorage.setItem(RANGE_KEY, selectedRange()); } catch (e) {}
+});
+showRangeHint();
+
+// Correction de l'écrit
+const ARTICLES = ["der", "die", "das"];
+function norm(s) { return s.replace(/[.!]+$/, "").replace(/\s+/g, " ").trim(); }
+function noUml(s) {
+  return s.replace(/ae/g, "a").replace(/oe/g, "o").replace(/ue/g, "u")
+          .replace(/ä/g, "a").replace(/ö/g, "o").replace(/ü/g, "u").replace(/ß/g, "ss");
+}
+// Compare une réponse à une forme attendue. Renvoie "ok", "casse" (juste à la majuscule près),
+// "casse-stricte" (juste à la majuscule près, mais elle compte pour ce mot),
+// "presque" (juste à un tréma ou un ß près), "article-manquant", "article-faux" ou null.
+function compare(got, exp, w) {
+  // Une majuscule en début de réponse (« Der Turm ») n'est pas une faute, sauf quand la casse compte.
+  if (got === exp || (!w.casse && got === exp.charAt(0).toUpperCase() + exp.slice(1))) return "ok";
+  const g = got.toLowerCase(), e = exp.toLowerCase();
+  if (g === e) return w.casse ? "casse-stricte" : "casse";
+  if (noUml(g) === noUml(e)) return "presque";
+  const [art, ...rest] = e.split(" ");
+  if (ARTICLES.includes(art)) {
+    const noun = rest.join(" "), gw = g.split(" ");
+    if (g === noun || noUml(g) === noUml(noun)) return "article-manquant";
+    if (ARTICLES.includes(gw[0]) && gw.slice(1).join(" ") === noun) return "article-faux";
+  }
+  return null;
+}
+function checkWritten(value, w) {
+  const got = norm(value);
+  const answer = deText(w);
+  if (!got) return { ok: false, msg: "Réponse attendue : " + answer };
+  // Une seule forme suffit quand plusieurs sont acceptées ; on peut aussi en donner plusieurs (« das Meer / die See »).
+  const parts = got.split(/\s*(?:\/|,|\boder\b)\s*/).filter(Boolean);
+  const results = parts.map(p => w.de.map(e => compare(p, e, w)));
+  const best = r => r.includes("ok") ? "ok" : r.includes("casse") ? "casse" : r.find(Boolean) || null;
+  const verdicts = results.map(best);
+  if (verdicts.every(v => v === "ok")) return { ok: true };
+  if (verdicts.every(v => v === "ok" || v === "casse"))
+    return { ok: true, note: "Attention à la majuscule : " + answer };
+  const v = verdicts.find(v => v !== "ok" && v !== "casse");
+  if (v === "casse-stricte") return { ok: false, msg: "Ici, la majuscule compte : " + answer };
+  if (v === "presque") return { ok: false, msg: "Presque ! Attention à ä, ö, ü ou ß : " + answer };
+  if (v === "article-manquant") return { ok: false, msg: "Il manque l’article : " + answer };
+  if (v === "article-faux") return { ok: false, msg: `Mauvais article : ${answer}` };
+  return { ok: false, msg: "Réponse attendue : " + answer };
+}
+
+function start(m) {
+  mode = m;
+  set = SERIES.find(s => s.id === selectedRange()).pick();
+  queue = shuffle([...set]);
+  status = WORDS.map(() => "todo");
+  firstTry = WORDS.map(() => null);
+  $("home").classList.add("hidden");
+  $("result").classList.add("hidden");
+  $("quiz").classList.remove("hidden");
+  next();
+}
+
+function renderProgress() {
+  if (set.length > 30) {
+    const done = set.filter(i => status[i] === "done").length;
+    $("progress").innerHTML = `<span class="progress-text">${done} / ${set.length} mots</span>`;
+    return;
+  }
+  $("progress").innerHTML = set.map(i =>
+    `<span class="dot ${status[i] === "done" ? "done" : firstTry[i] === false ? "missed" : ""} ${i === current ? "current" : ""}"></span>`
+  ).join("");
+}
+
+function next() {
+  if (!queue.length) return finish();
+  current = queue.shift();
+  checked = false;
+  const w = WORDS[current];
+  $("verdict").classList.add("hidden");
+  if (mode === "qcm") {
+    $("prompt").innerHTML = `<div class="theme">${w.theme.name}</div><div class="big">${deText(w)}</div>`
+      + (w.pl ? `<div class="sub">pluriel : ${w.pl}</div>` : "");
+    // Trois mauvaises réponses, prises dans la série en cours, ou dans tout le vocabulaire si elle est trop petite.
+    let pool = set.filter(i => i !== current && WORDS[i].fr !== w.fr);
+    if (pool.length < 3) pool = [...WORDS.keys()].filter(i => i !== current && WORDS[i].fr !== w.fr);
+    const options = shuffle([current, ...shuffle(pool).slice(0, 3)]);
+    $("answer").innerHTML = `<div class="choices">${options.map((i, k) =>
+      `<button class="choice" type="button" data-i="${i}"><span class="k">${k + 1}</span><span>${WORDS[i].fr}</span></button>`).join("")}</div>`;
+    document.querySelectorAll(".choice").forEach(b => b.addEventListener("click", () => answerChoice(+b.dataset.i)));
+    $("action").classList.add("hidden");
+    document.querySelector(".choice").focus();
+  } else {
+    $("prompt").innerHTML = `<div class="theme">${w.theme.name}</div><div class="big">${w.fr}</div>`
+      + `<div class="sub">Écris-le en allemand${w.de.some(e => ARTICLES.includes(e.split(" ")[0])) ? ", avec l’article" : ""}.</div>`;
+    $("answer").innerHTML = `
+      <div class="field" id="field">
+        <label for="in-de">Allemand</label>
+        <input id="in-de" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done">
+        <div class="fb"></div>
+      </div>
+      <div class="keys" id="keys">${["ä", "ö", "ü", "ß"].map(c => `<button class="key" type="button">${c}</button>`).join("")}</div>`;
+    const inp = $("in-de");
+    inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); action(); } });
+    document.querySelectorAll(".key").forEach(k => {
+      k.addEventListener("mousedown", e => e.preventDefault());
+      k.addEventListener("click", () => {
+        if (inp.readOnly) return;
+        const s = inp.selectionStart ?? inp.value.length, e = inp.selectionEnd ?? inp.value.length;
+        inp.value = inp.value.slice(0, s) + k.textContent + inp.value.slice(e);
+        inp.focus();
+        inp.setSelectionRange(s + 1, s + 1);
+      });
+    });
+    $("action").classList.remove("hidden");
+    $("action").textContent = "Vérifier";
+    inp.focus();
+  }
+  renderProgress();
+}
+
+// Fin d'une question, commune aux deux exercices
+function conclude(ok, extra) {
+  const w = WORDS[current];
+  if (firstTry[current] === null) firstTry[current] = ok;
+  const verdict = $("verdict");
+  verdict.classList.remove("hidden", "good", "bad");
+  const note = [extra, w.note].filter(Boolean).map(n => `<span class="note">${n}</span>`).join("");
+  if (ok) {
+    status[current] = "done";
+    verdict.innerHTML = "Juste !" + note;
+    verdict.classList.add("good");
+  } else {
+    queue.push(current);
+    verdict.innerHTML = "Ce mot reviendra plus tard." + note;
+    verdict.classList.add("bad");
+    const card = $("card");
+    card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake");
+  }
+  $("action").classList.remove("hidden");
+  $("action").textContent = queue.length ? "Mot suivant" : "Voir le résultat";
+  checked = true;
+  renderProgress();
+  $("action").focus();
+}
+
+function answerChoice(i) {
+  if (checked) return;
+  document.querySelectorAll(".choice").forEach(b => {
+    b.disabled = true;
+    if (+b.dataset.i === current) b.classList.add("right");
+    else if (+b.dataset.i === i) b.classList.add("wrong");
+  });
+  conclude(i === current, i === current ? null : `${deText(WORDS[current])} : ${WORDS[current].fr}`);
+}
+
+function verifyWritten() {
+  const w = WORDS[current];
+  const field = $("field"), inp = $("in-de");
+  const r = checkWritten(inp.value, w);
+  field.classList.add(r.ok ? "ok" : "ko");
+  inp.readOnly = true;
+  field.querySelector(".fb").innerHTML = r.ok ? "✓ " + deText(w) + (w.pl ? ` (pl. ${w.pl})` : "") : r.msg;
+  $("keys").classList.add("hidden");
+  conclude(r.ok, r.note);
+}
+
+function action() {
+  if (checked) return next();
+  if (mode === "ecrire") verifyWritten();
+}
+
+// Touches 1 à 4 pour choisir une réponse au clavier
+document.addEventListener("keydown", e => {
+  if (mode !== "qcm" || checked || $("quiz").classList.contains("hidden")) return;
+  const b = document.querySelectorAll(".choice")[+e.key - 1];
+  if (b) b.click();
+});
+
+function finish() {
+  $("quiz").classList.add("hidden");
+  $("result").classList.remove("hidden");
+  const n = set.length;
+  const good = set.filter(i => firstTry[i]).length;
+  $("score").textContent = `${good} / ${n}`;
+  $("comment").textContent =
+    good === n ? "Parfait, aucune erreur !" :
+    good >= 0.8 * n ? "Très bien. Encore un tour et ce sera parfait." :
+    good >= 0.4 * n ? "C’est en bonne voie. Refais un tour pour les fixer." :
+    "Relis la liste puis réessaie : ça rentre à force de répéter.";
+  const missed = set.filter(i => !firstTry[i]).map(i => WORDS[i]);
+  $("missed").innerHTML = missed.length
+    ? "<p>À revoir :</p><ul>" + missed.map(w => `<li><strong>${deText(w)}</strong> – ${w.fr}</li>`).join("") + "</ul>"
+    : "";
+  cadeau($("gift"), good, n, "mots");
+}
+
+$("action").addEventListener("click", action);
+document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => start(b.dataset.mode)));
+$("again").addEventListener("click", () => start(mode));
+$("home-btn").addEventListener("click", () => { $("result").classList.add("hidden"); $("home").classList.remove("hidden"); });
+$("quit").addEventListener("click", () => { $("quiz").classList.add("hidden"); $("home").classList.remove("hidden"); });
+
+// Aperçu de l'écran de fin sans faire le quiz : ajouter ?apercu à l'adresse (10 / 12, avec le cadeau),
+// ou ?apercu=7 pour choisir le nombre de mots justes sur le premier thème (12 mots).
+const apercu = new URLSearchParams(location.search).get("apercu");
+if (apercu !== null) {
+  const ids = SERIES[0].pick();
+  const good = /^\d+$/.test(apercu) ? Math.min(+apercu, ids.length) : 10;
+  mode = "qcm";
+  set = ids;
+  status = WORDS.map(() => "done");
+  firstTry = WORDS.map((_, i) => ids.indexOf(i) < good);
+  $("home").classList.add("hidden");
+  finish();
+}
+</script>
+</body>
+</html>
