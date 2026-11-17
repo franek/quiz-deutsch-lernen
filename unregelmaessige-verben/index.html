@@ -594,6 +594,17 @@ $("again").addEventListener("click", () => start(mode));
 $("home-btn").addEventListener("click", () => { $("result").classList.add("hidden"); $("home").classList.remove("hidden"); });
 $("quit").addEventListener("click", () => { $("quiz").classList.add("hidden"); $("home").classList.remove("hidden"); });
 
+// Aperçu de l'écran de fin sans faire le quiz : ajouter ?apercu à l'adresse.
+// Score d'exemple sur la série 1 à 10, avec deux verbes à revoir.
+if (new URLSearchParams(location.search).has("apercu")) {
+  mode = "forms";
+  set = [...VERBS.keys()].slice(0, 10);
+  status = VERBS.map(() => "done");
+  firstTry = VERBS.map((_, i) => i !== 2 && i !== 6);
+  $("home").classList.add("hidden");
+  finish();
+}
+
 // Touches ä ö ü ß : insèrent dans le champ actif sans lui faire perdre le focus
 let lastInput = null;
 document.addEventListener("focusin", e => { if (e.target.matches("#fields input")) lastInput = e.target; });

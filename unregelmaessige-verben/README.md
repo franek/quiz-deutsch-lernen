@@ -24,6 +24,8 @@ Les verbes sont tirés au hasard. Un verbe raté revient en fin de file jusqu'à
 
 À la fin, un **cadeau** : un épisode de *Karambolage* (ARTE), tiré au hasard dans `GIFTS`. Le lecteur ARTE n'est chargé qu'au clic sur la vignette, et un lien permet de regarder la vidéo sur arte.tv.
 
+Pour voir l'écran de fin sans faire le quiz, ajouter `?apercu` à l'adresse (ex. `https://nicht.dume.me/unregelmaessige-verben/?apercu`) : il s'affiche avec un score d'exemple de 8 / 10.
+
 Le pronom (« er », ou « es » pour *gelingen* et *geschehen*) est affiché devant les champs. L'élève peut le retaper ou non, les deux sont acceptés.
 
 ## Structure du code
