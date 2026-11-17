@@ -191,7 +191,8 @@ tr:last-child td { border-bottom: 0; }
 .gift-video:hover::after { transform: scale(1.06); }
 .gift-video:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
 .gift iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 12px; background: #000; }
-.gift-name { font-weight: 500; margin: .6rem 0 0; color: var(--ink) !important; }
+.gift-label { margin: .6rem 0 0 !important; font-size: .8rem; font-weight: 500; text-transform: uppercase; letter-spacing: .05em; }
+.gift-name { font-weight: 500; margin: .1rem 0 0; color: var(--ink) !important; }
 .gift-link { font-size: .9rem; color: var(--muted); }
 .second-btn {
   width: 100%; font: inherit; font-weight: 500; padding: .8rem 1rem; border-radius: 12px;
@@ -264,6 +265,7 @@ tr:last-child td { border-bottom: 0; }
   </section>
 
 </main>
+<script src="karambolage.js"></script>
 <script>
 const VERBS = [
   // Page 130
@@ -364,13 +366,6 @@ const VERBS = [
   { inf: "ziehen",      pres: "zieht",       pret: "zog",       parf: "hat/ist gezogen", fr: "tirer, aller" },
   // Ajouté à la main en bas de la page 131
   { inf: "haben",       pres: "hat",         pret: "hatte",     parf: "hat gehabt",      fr: "avoir" }
-];
-
-// Cadeaux de fin de quiz : vidéos Karambolage (ARTE). Pour en ajouter une, recopier l'identifiant
-// de l'adresse arte.tv (ex. 133252-007-A) et l'image og:image de la page, en taille 640x360.
-const GIFTS = [
-  { id: "133252-007-A", title: "Poubelle / Faire fuir un animal / Zwanzigeins",
-    img: "https://api-cdn.arte.tv/img/v2/image/NPycvZQ2DBJS7r49RiXN7k/640x360" }
 ];
 
 const LABELS = { inf: "Infinitif", pres: "Présent (3e pers.)", pret: "Prétérit", parf: "Parfait" };
@@ -578,20 +573,31 @@ function finish() {
     <p>… à partir de ${needed} / ${n} verbes justes du premier coup (80 %). Il t’en manque ${needed - good}. Refais un tour !</p>`;
 }
 
+// Cadeau : une vidéo Karambolage tirée au hasard dans karambolage.js, parmi celles encore en ligne.
 // Le lecteur ARTE n'est chargé qu'au clic : rien ne se lance ni ne se télécharge tout seul.
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 function showGift() {
-  const g = GIFTS[Math.floor(Math.random() * GIFTS.length)];
-  const page = `https://www.arte.tv/fr/videos/${g.id}/karambolage/`;
+  const today = new Date().toISOString().slice(0, 10);
+  const list = (typeof KARAMBOLAGE === "undefined" ? [] : KARAMBOLAGE).filter(v => v[4] > today);
+  if (!list.length) {
+    $("gift").innerHTML = `
+      <p class="gift-title">🎁 Ton <span class="hl">cadeau</span></p>
+      <p>Va voir les vidéos de <a href="https://www.arte.tv/fr/videos/RC-014034/karambolage/" target="_blank" rel="noopener"><em>Karambolage</em> sur arte.tv</a>.</p>`;
+    return;
+  }
+  const [id, label, title, img] = list[Math.floor(Math.random() * list.length)];
+  const t = esc(title);
   $("gift").innerHTML = `
     <p class="gift-title">🎁 Ton <span class="hl">cadeau</span></p>
-    <p>Un épisode de <em>Karambolage</em>, l’émission d’ARTE sur les petites différences entre la France et l’Allemagne.</p>
-    <button class="gift-video" type="button" id="gift-play" style="background-image:url('${g.img}')" aria-label="Regarder la vidéo : ${g.title}"></button>
-    <p class="gift-name">${g.title}</p>
-    <a class="gift-link" href="${page}" target="_blank" rel="noopener">Regarder sur arte.tv</a>`;
+    <p>Une vidéo de <em>Karambolage</em>, l’émission d’ARTE qui s’amuse des petites différences entre les pays. Il y en a ${list.length}, une nouvelle à chaque fois !</p>
+    <button class="gift-video" type="button" id="gift-play" style="background-image:url('https://api-cdn.arte.tv/img/v2/image/${img}/640x360')" aria-label="Regarder la vidéo : ${t}"></button>
+    <p class="gift-label">${esc(KARAMBOLAGE_LABELS[label])}</p>
+    <p class="gift-name">${t}</p>
+    <a class="gift-link" href="https://www.arte.tv/fr/videos/${id}/" target="_blank" rel="noopener">Regarder sur arte.tv</a>`;
   $("gift-play").addEventListener("click", () => {
     const f = document.createElement("iframe");
-    f.src = `https://www.arte.tv/embeds/fr/${g.id}?autoplay=true`;
-    f.title = "Karambolage – " + g.title;
+    f.src = `https://www.arte.tv/embeds/fr/${id}?autoplay=true`;
+    f.title = "Karambolage – " + title;
     f.allow = "autoplay; fullscreen; picture-in-picture";
     f.allowFullscreen = true;
     $("gift-play").replaceWith(f);
