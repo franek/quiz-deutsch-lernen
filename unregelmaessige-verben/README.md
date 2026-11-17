@@ -1,10 +1,10 @@
 # Unregelmäßige Verben – verbes irréguliers
 
-Page web d'entraînement aux verbes forts et faibles irréguliers allemands, pour un élève de collège. Elle couvre les 20 premiers verbes de sa fiche de cours, « Verbes forts et verbes faibles irréguliers », de *anfangen* à *fliegen*.
+Page web d'entraînement aux verbes forts et faibles irréguliers allemands, pour un élève de collège. Elle couvre toute sa fiche de cours, « Verbes forts et verbes faibles irréguliers » (pages 130 et 131 du manuel), soit 93 verbes de *anfangen* à *ziehen*, dont *sein*, *werden* et *haben* ajoutés à la main au bas des pages.
 
 ## Utilisation
 
-Tout tient dans `index.html` : HTML, CSS et JS inline, sans build ni dépendance. Pour l'utiliser, on peut l'ouvrir directement dans un navigateur ou le servir en local :
+Tout tient dans `index.html` (HTML, CSS et JS inline, sans build ni dépendance), plus `karambolage.js`, la liste des vidéos offertes en fin de quiz. Pour l'utiliser, on peut l'ouvrir directement dans un navigateur ou le servir en local :
 
 ```bash
 python3 -m http.server
@@ -14,35 +14,51 @@ Le seul élément externe est la police Lexend (Google Fonts). Sans connexion, l
 
 ## Fonctionnement
 
-L'élève choisit d'abord la série (verbes 1 à 10, 11 à 20, ou les 20), puis l'exercice :
+L'élève choisit d'abord la série, puis l'exercice :
 
+- **Séries** : une par tranche de 10 verbes dans l'ordre de la fiche (1 à 10, 11 à 20… 81 à 93 : un reste de moins de 5 verbes est rattaché à la dernière série), toute la fiche, ou 20 verbes tirés au hasard. Le premier et le dernier verbe de la série s'affichent sous les boutons. Le dernier choix est mémorisé dans le navigateur.
 - **Les trois formes** : l'infinitif et la traduction sont donnés, il faut écrire le présent (3e pers.), le prétérit et le parfait.
 - **À partir du français** : seule la traduction est donnée, il faut écrire l'infinitif et les trois formes.
 
-Les verbes sont tirés au hasard. Un verbe raté revient en fin de file jusqu'à ce qu'il soit juste. Le score final ne compte que les verbes réussis du premier coup, et liste ceux à revoir.
+Les verbes sont tirés au hasard. Un verbe raté revient en fin de file jusqu'à ce qu'il soit juste. Le score final ne compte que les verbes réussis du premier coup, et liste ceux à revoir. Au-delà de 30 verbes, la barre de pastilles est remplacée par un compteur.
 
-Le pronom « er » est affiché devant les champs. L'élève peut le retaper ou non, les deux sont acceptés.
+À la fin, si au moins 80 % des verbes sont justes du premier coup, un **cadeau** : une vidéo de *Karambolage* (ARTE), tirée au hasard parmi les 598 de `karambolage.js`. En dessous de 80 %, un message indique combien de verbes il manquait pour l'obtenir. Le lecteur ARTE n'est chargé qu'au clic sur la vignette, et un lien permet de regarder la vidéo sur arte.tv.
+
+Pour voir l'écran de fin sans faire le quiz, ajouter `?apercu` à l'adresse (ex. `https://nicht.dume.me/unregelmaessige-verben/?apercu`) : il s'affiche avec un score d'exemple de 8 / 10, donc avec le cadeau. `?apercu=7` montre 7 / 10, sans le cadeau.
+
+Le pronom (« er », ou « es » pour *gelingen* et *geschehen*) est affiché devant les champs. L'élève peut le retaper ou non, les deux sont acceptés.
 
 ## Structure du code
 
-- `VERBS` : tableau des verbes. Chaque entrée contient `inf`, `pres`, `pret` et `parf` (sans le « er »), `fr` (traduction), et optionnellement `frHint` (consigne affichée en mode français, quand la traduction est ambiguë) et `star: true` (présent irrégulier).
+- `VERBS` : tableau des verbes, dans l'ordre de la fiche. Chaque entrée contient `inf`, `pres`, `pret` et `parf` (sans le pronom), `fr` (traduction), et optionnellement :
+  - `frHint` : consigne affichée en mode français, quand la traduction est ambiguë ;
+  - `star: true` : présent irrégulier (astérisque de la fiche) ;
+  - `pron` : pronom, si ce n'est pas « er » ;
+  - `alt` : autres réponses acceptées, par champ (ex. `alt: { inf: ["Sport treiben"] }`).
+  Un parfait écrit `hat/ist …` accepte les deux auxiliaires.
+- `karambolage.js` : `KARAMBOLAGE`, vidéos offertes en fin de quiz, au format `[identifiant ARTE, étiquette, titre, image, fin de diffusion]`, et `KARAMBOLAGE_LABELS`, les étiquettes (« Émission complète », « La langue »…). Générée le 17/11/2026 à partir de la liste des programId de Karambolage et de l'API du lecteur ARTE (`https://api.arte.tv/api/player/v2/config/fr/<id>`) : on n'a gardé que les vidéos jouables et intégrables. La page écarte d'elle-même les vidéos dont la fin de diffusion est passée. S'il n'en reste plus aucune, elle affiche un lien vers Karambolage sur arte.tv.
+- `SERIES` : séries proposées, générées à partir de `VERBS`.
 - `MODES` : champs demandés pour chaque exercice.
-- `check(field, value, verb)` : correction d'une réponse.
-- `start()` : construit la série (`set`) à partir du choix 1–10 / 11–20 / tout.
+- `answers(field, verb)` et `check(field, value, verb)` : réponses acceptées et correction.
+- `start()` : construit la série (`set`) à partir du choix.
 
 ## Choix faits
 
-- **Source des données** : formes et traductions recopiées de la fiche de l'élève, astérisques compris, pour coller à ce qu'il apprend en classe.
+- **Source des données** : formes et traductions recopiées de la fiche de l'élève, astérisques compris, pour coller à ce qu'il apprend en classe. Les photos de la fiche ne sont pas versionnées (`.gitignore`).
 - **Correction tolérante mais pédagogique** : majuscules et espaces sont ignorés. Une réponse juste à un tréma ou un ß près (ex. « ass » pour « aß », « fangt » pour « fängt ») est comptée fausse, mais avec un message « Presque ! » plutôt qu'une simple erreur. Pour le parfait, le quiz signale spécifiquement un auxiliaire manquant ou erroné (« hat » / « ist »).
-- **Présents irréguliers** : les verbes marqués d'un astérisque sur la fiche (`star: true`) affichent un rappel « le présent change de voyelle » après correction.
-- **Les deux « commencer »** : *anfangen* et *beginnen* ont la même traduction. En mode français, la consigne précise « verbe à particule séparable » ou « sans particule ».
-- **biegen** : gardé avec « ist gebogen » comme sur la fiche, ce qui est correct au sens de « tourner » (dans une rue). Au sens de « plier », c'est « hat gebogen ».
+- **Présents irréguliers** : les verbes marqués d'un astérisque sur la fiche (`star: true`) affichent un rappel « le présent change de voyelle » après correction. *sein*, *werden* et *haben*, écrits à la main, n'en ont pas.
+- **Traductions en double** : *anfangen* / *beginnen* (« commencer ») et *laufen* / *rennen* (« courir ») ont une consigne précise en mode français : particule séparable ou non, verbe fort ou prétérit en -te.
+- **Cas particuliers de la fiche** :
+  - *biegen* : gardé avec « ist gebogen », correct au sens de « tourner » (dans une rue). Au sens de « plier », c'est « hat gebogen ».
+  - *treiben (Sport)* : « treibt Sport », « hat Sport getrieben ». En mode français, « treiben », « Sport treiben » et « treiben (Sport) » sont acceptés.
+  - *ziehen* : « hat/ist gezogen », les deux auxiliaires sont acceptés (« tirer » / « aller, déménager »).
+  - *gelingen*, *geschehen* : verbes impersonnels, conjugués avec « es ».
 - **Clavier** : boutons ä, ö, ü, ß pour la saisie sur téléphone. Ils insèrent le caractère dans le champ actif sans lui faire perdre le focus.
 - **Couleurs** : chaque champ reprend la couleur de surligneur de la fiche (bleu-vert pour l'infinitif, vert pour le présent, jaune pour le prétérit, orange pour le parfait, violet pour la traduction). Thèmes clair et sombre gérés.
+- **Liste de révision** : tableau numéroté sur ordinateur, une fiche par verbe sur téléphone.
 
 ## Ajouter des verbes
 
-1. Ajouter les entrées à la fin de `VERBS`, dans l'ordre de la fiche.
-2. Mettre à jour le sélecteur de série : les découpages 1–10 et 11–20 sont codés en dur dans `start()` (`all.slice(0, 10)`, `all.slice(10, 20)`) et dans le HTML (`.range`). Prévoir par exemple une série par bloc de 10.
-3. Mettre à jour le titre et le texte d'introduction (« les 20 premiers », « de *anfangen* à *fliegen* »).
-4. Vérifier `noUml()` : la fonction ramène aussi « ae », « oe » et « ue » à a, o, u pour reconnaître les trémas tapés à l'ancienne. Un nouveau verbe qui contient naturellement « ue » ou « oe » pourrait fausser le message « Presque ! ».
+1. Ajouter les entrées dans `VERBS`, à leur place dans la fiche. Les séries et les textes se mettent à jour seuls.
+2. Mettre à jour le texte d'introduction s'il change de premier ou de dernier verbe (« de *anfangen* à *ziehen* »).
+3. Vérifier `noUml()` : la fonction ramène aussi « ae », « oe » et « ue » à a, o, u pour reconnaître les trémas tapés à l'ancienne. Un nouveau verbe qui contient naturellement « ue » ou « oe » pourrait fausser le message « Presque ! ».

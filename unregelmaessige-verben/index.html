@@ -58,7 +58,14 @@ p.lead { color: var(--muted); margin: 0 0 1.5rem; }
 
 .modes { display: grid; gap: .75rem; }
 .range-title { font-weight: 500; margin: 0 0 .5rem; }
-.range { display: flex; gap: .5rem; margin: 0 0 1.25rem; flex-wrap: wrap; }
+.range { display: flex; gap: .5rem; margin: 0 0 .6rem; flex-wrap: wrap; }
+.gift-pill {
+  display: inline-block; margin: -.75rem 0 1.5rem; padding: .45rem .9rem; border-radius: 14px;
+  background: var(--violet); font-size: .95rem; line-height: 1.4;
+}
+.range-hint { color: var(--muted); font-size: .95rem; margin: 0 0 1.25rem; min-height: 1.5em; }
+.progress-text { color: var(--muted); font-weight: 500; }
+.num { display: inline-block; min-width: 1.8em; color: var(--muted); font-size: .85em; }
 .range label { cursor: pointer; position: relative; }
 .range input { position: absolute; opacity: 0; pointer-events: none; }
 .range span { display: inline-block; padding: .45rem .95rem; border-radius: 999px; border: 2px solid var(--line); background: var(--paper); font-weight: 500; }
@@ -167,6 +174,26 @@ tr:last-child td { border-bottom: 0; }
 .result ul { padding-left: 1.2rem; }
 .result li { margin-bottom: .3rem; }
 .btns { display: grid; gap: .6rem; margin-top: 1.4rem; }
+
+.gift { margin-top: 1.4rem; padding-top: 1.2rem; border-top: 2px dashed var(--line); }
+.gift-title { font-weight: 700; font-size: 1.15rem; margin: 0 0 .2rem; }
+.gift-title .hl { background: linear-gradient(transparent 55%, var(--violet) 55%); padding: 0 .15em; }
+.gift p { margin: 0 0 .8rem; color: var(--muted); }
+.gift-video {
+  position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; padding: 0; overflow: hidden;
+  border: 0; border-radius: 12px; background: #000 center / cover no-repeat; cursor: pointer;
+}
+.gift-video::after {
+  content: "▶"; position: absolute; inset: 0; margin: auto; width: 68px; height: 68px; border-radius: 50%;
+  display: grid; place-items: center; padding-left: 5px; font-size: 1.7rem;
+  background: rgba(255,255,255,.92); color: #1E2A44; box-shadow: 0 2px 12px rgba(0,0,0,.35);
+}
+.gift-video:hover::after { transform: scale(1.06); }
+.gift-video:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+.gift iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 12px; background: #000; }
+.gift-label { margin: .6rem 0 0 !important; font-size: .8rem; font-weight: 500; text-transform: uppercase; letter-spacing: .05em; }
+.gift-name { font-weight: 500; margin: .1rem 0 0; color: var(--ink) !important; }
+.gift-link { font-size: .9rem; color: var(--muted); }
 .second-btn {
   width: 100%; font: inherit; font-weight: 500; padding: .8rem 1rem; border-radius: 12px;
   border: 2px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer;
@@ -182,14 +209,12 @@ tr:last-child td { border-bottom: 0; }
 
   <section id="home">
     <a class="link" href="../">← Tous les quiz</a>
-    <h1>Verbes irréguliers : <span class="hl">les 20 premiers</span></h1>
-    <p class="lead">De <em>anfangen</em> à <em>fliegen</em>. Les verbes ratés reviennent à la fin jusqu’à ce que tout soit juste.</p>
+    <h1>Verbes <span class="hl">irréguliers</span></h1>
+    <p class="lead">Toute la fiche, de <em>anfangen</em> à <em>ziehen</em>. Les verbes ratés reviennent à la fin jusqu’à ce que tout soit juste.</p>
+    <p class="gift-pill">🎁 Au moins 80&nbsp;% de justes du premier coup&nbsp;? <strong>Un cadeau t’attend à la fin&nbsp;!</strong></p>
     <p class="range-title">Quels verbes ?</p>
-    <div class="range" role="radiogroup">
-      <label><input type="radio" name="range" value="a"><span>1 à 10</span></label>
-      <label><input type="radio" name="range" value="b"><span>11 à 20</span></label>
-      <label><input type="radio" name="range" value="all" checked><span>Les 20</span></label>
-    </div>
+    <div class="range" role="radiogroup" id="ranges"></div>
+    <p class="range-hint" id="range-hint"></p>
     <div class="modes">
       <button class="mode" data-mode="forms">
         <strong>Les trois formes</strong>
@@ -231,6 +256,7 @@ tr:last-child td { border-bottom: 0; }
       <div class="score" id="score"></div>
       <p id="comment"></p>
       <div id="missed"></div>
+      <div id="gift" class="gift"></div>
       <div class="btns">
         <button class="main-btn" id="again">Recommencer</button>
         <button class="second-btn" id="home-btn">Changer d’exercice</button>
@@ -239,8 +265,10 @@ tr:last-child td { border-bottom: 0; }
   </section>
 
 </main>
+<script src="karambolage.js"></script>
 <script>
 const VERBS = [
+  // Page 130
   { inf: "anfangen",  pres: "fängt an",  pret: "fing an",  parf: "hat angefangen",  fr: "commencer", frHint: "commencer (verbe à particule séparable)", star: true },
   { inf: "aufstehen", pres: "steht auf", pret: "stand auf", parf: "ist aufgestanden", fr: "se lever" },
   { inf: "ausleihen", pres: "leiht aus", pret: "lieh aus", parf: "hat ausgeliehen",  fr: "emprunter" },
@@ -260,7 +288,84 @@ const VERBS = [
   { inf: "fahren",      pres: "fährt",       pret: "fuhr",      parf: "ist gefahren",    fr: "aller (en véhicule)", star: true },
   { inf: "fallen",      pres: "fällt",       pret: "fiel",      parf: "ist gefallen",    fr: "tomber", star: true },
   { inf: "finden",      pres: "findet",      pret: "fand",      parf: "hat gefunden",    fr: "trouver" },
-  { inf: "fliegen",     pres: "fliegt",      pret: "flog",      parf: "ist geflogen",    fr: "voler" }
+  { inf: "fliegen",     pres: "fliegt",      pret: "flog",      parf: "ist geflogen",    fr: "voler" },
+  { inf: "fliehen",     pres: "flieht",      pret: "floh",      parf: "ist geflohen",    fr: "fuir" },
+  { inf: "fließen",     pres: "fließt",      pret: "floss",     parf: "ist geflossen",   fr: "couler" },
+  { inf: "frieren",     pres: "friert",      pret: "fror",      parf: "hat gefroren",    fr: "geler, avoir froid" },
+  { inf: "geben",       pres: "gibt",        pret: "gab",       parf: "hat gegeben",     fr: "donner", star: true },
+  { inf: "gefallen",    pres: "gefällt",     pret: "gefiel",    parf: "hat gefallen",    fr: "plaire", star: true },
+  { inf: "gehen",       pres: "geht",        pret: "ging",      parf: "ist gegangen",    fr: "aller" },
+  { inf: "gelingen",    pres: "gelingt",     pret: "gelang",    parf: "ist gelungen",    fr: "réussir", pron: "es" },
+  { inf: "gelten",      pres: "gilt",        pret: "galt",      parf: "hat gegolten",    fr: "valoir, passer pour", star: true },
+  { inf: "genießen",    pres: "genießt",     pret: "genoss",    parf: "hat genossen",    fr: "profiter de" },
+  { inf: "geschehen",   pres: "geschieht",   pret: "geschah",   parf: "ist geschehen",   fr: "se passer, arriver", pron: "es", star: true },
+  { inf: "gewinnen",    pres: "gewinnt",     pret: "gewann",    parf: "hat gewonnen",    fr: "gagner" },
+  { inf: "graben",      pres: "gräbt",       pret: "grub",      parf: "hat gegraben",    fr: "creuser", star: true },
+  { inf: "greifen",     pres: "greift",      pret: "griff",     parf: "hat gegriffen",   fr: "saisir" },
+  { inf: "halten",      pres: "hält",        pret: "hielt",     parf: "hat gehalten",    fr: "s’arrêter, tenir", star: true },
+  { inf: "hängen",      pres: "hängt",       pret: "hing",      parf: "hat gehangen",    fr: "être accroché" },
+  { inf: "heben",       pres: "hebt",        pret: "hob",       parf: "hat gehoben",     fr: "lever (quelque chose)" },
+  { inf: "heißen",      pres: "heißt",       pret: "hieß",      parf: "hat geheißen",    fr: "s’appeler" },
+  { inf: "helfen",      pres: "hilft",       pret: "half",      parf: "hat geholfen",    fr: "aider", star: true },
+  { inf: "kennen",      pres: "kennt",       pret: "kannte",    parf: "hat gekannt",     fr: "connaître" },
+  { inf: "klingen",     pres: "klingt",      pret: "klang",     parf: "hat geklungen",   fr: "sonner, émettre un son" },
+  { inf: "kommen",      pres: "kommt",       pret: "kam",       parf: "ist gekommen",    fr: "venir" },
+  { inf: "laden",       pres: "lädt",        pret: "lud",       parf: "hat geladen",     fr: "charger", star: true },
+  { inf: "lassen",      pres: "lässt",       pret: "ließ",      parf: "hat gelassen",    fr: "laisser", star: true },
+  { inf: "laufen",      pres: "läuft",       pret: "lief",      parf: "ist gelaufen",    fr: "courir", frHint: "courir (verbe fort)", star: true },
+  // Ajoutés à la main en bas de la page 130
+  { inf: "sein",        pres: "ist",         pret: "war",       parf: "ist gewesen",     fr: "être" },
+  { inf: "werden",      pres: "wird",        pret: "wurde",     parf: "ist geworden",    fr: "devenir" },
+  // Page 131
+  { inf: "lesen",       pres: "liest",       pret: "las",       parf: "hat gelesen",     fr: "lire", star: true },
+  { inf: "liegen",      pres: "liegt",       pret: "lag",       parf: "hat gelegen",     fr: "être couché" },
+  { inf: "lügen",       pres: "lügt",        pret: "log",       parf: "hat gelogen",     fr: "mentir" },
+  { inf: "nehmen",      pres: "nimmt",       pret: "nahm",      parf: "hat genommen",    fr: "prendre", star: true },
+  { inf: "nennen",      pres: "nennt",       pret: "nannte",    parf: "hat genannt",     fr: "nommer" },
+  { inf: "raten",       pres: "rät",         pret: "riet",      parf: "hat geraten",     fr: "conseiller, deviner", star: true },
+  { inf: "reiten",      pres: "reitet",      pret: "ritt",      parf: "ist geritten",    fr: "faire du cheval" },
+  { inf: "rennen",      pres: "rennt",       pret: "rannte",    parf: "ist gerannt",     fr: "courir", frHint: "courir (prétérit en -te)" },
+  { inf: "rufen",       pres: "ruft",        pret: "rief",      parf: "hat gerufen",     fr: "appeler" },
+  { inf: "scheinen",    pres: "scheint",     pret: "schien",    parf: "hat geschienen",  fr: "sembler, briller" },
+  { inf: "schießen",    pres: "schießt",     pret: "schoss",    parf: "hat geschossen",  fr: "tirer (arme)" },
+  { inf: "schlafen",    pres: "schläft",     pret: "schlief",   parf: "hat geschlafen",  fr: "dormir", star: true },
+  { inf: "schlagen",    pres: "schlägt",     pret: "schlug",    parf: "hat geschlagen",  fr: "frapper", star: true },
+  { inf: "schließen",   pres: "schließt",    pret: "schloss",   parf: "hat geschlossen", fr: "fermer" },
+  { inf: "schneiden",   pres: "schneidet",   pret: "schnitt",   parf: "hat geschnitten", fr: "couper" },
+  { inf: "schreiben",   pres: "schreibt",    pret: "schrieb",   parf: "hat geschrieben", fr: "écrire" },
+  { inf: "schreien",    pres: "schreit",     pret: "schrie",    parf: "hat geschrien",   fr: "crier" },
+  { inf: "schweigen",   pres: "schweigt",    pret: "schwieg",   parf: "hat geschwiegen", fr: "se taire" },
+  { inf: "schwimmen",   pres: "schwimmt",    pret: "schwamm",   parf: "ist geschwommen", fr: "nager" },
+  { inf: "schwören",    pres: "schwört",     pret: "schwor",    parf: "hat geschworen",  fr: "jurer" },
+  { inf: "sehen",       pres: "sieht",       pret: "sah",       parf: "hat gesehen",     fr: "voir", star: true },
+  { inf: "singen",      pres: "singt",       pret: "sang",      parf: "hat gesungen",    fr: "chanter" },
+  { inf: "sitzen",      pres: "sitzt",       pret: "saß",       parf: "hat gesessen",    fr: "être assis" },
+  { inf: "sprechen",    pres: "spricht",     pret: "sprach",    parf: "hat gesprochen",  fr: "parler", star: true },
+  { inf: "springen",    pres: "springt",     pret: "sprang",    parf: "ist gesprungen",  fr: "sauter" },
+  { inf: "stehen",      pres: "steht",       pret: "stand",     parf: "hat gestanden",   fr: "être debout" },
+  { inf: "steigen",     pres: "steigt",      pret: "stieg",     parf: "ist gestiegen",   fr: "monter" },
+  { inf: "sterben",     pres: "stirbt",      pret: "starb",     parf: "ist gestorben",   fr: "mourir", star: true },
+  { inf: "streiten",    pres: "streitet",    pret: "stritt",    parf: "hat gestritten",  fr: "se disputer" },
+  { inf: "tragen",      pres: "trägt",       pret: "trug",      parf: "hat getragen",    fr: "porter", star: true },
+  { inf: "treffen",     pres: "trifft",      pret: "traf",      parf: "hat getroffen",   fr: "rencontrer", star: true },
+  { inf: "treiben (Sport)", pres: "treibt Sport", pret: "trieb Sport", parf: "hat Sport getrieben", fr: "faire du sport",
+    alt: { inf: ["Sport treiben", "treiben"] } },
+  { inf: "trinken",     pres: "trinkt",      pret: "trank",     parf: "hat getrunken",   fr: "boire" },
+  { inf: "treten",      pres: "tritt",       pret: "trat",      parf: "ist getreten",    fr: "entrer", star: true },
+  { inf: "tun",         pres: "tut",         pret: "tat",       parf: "hat getan",       fr: "faire" },
+  { inf: "verbinden",   pres: "verbindet",   pret: "verband",   parf: "hat verbunden",   fr: "assembler, relier" },
+  { inf: "vergessen",   pres: "vergisst",    pret: "vergaß",    parf: "hat vergessen",   fr: "oublier", star: true },
+  { inf: "vergleichen", pres: "vergleicht",  pret: "verglich",  parf: "hat verglichen",  fr: "comparer" },
+  { inf: "verlieren",   pres: "verliert",    pret: "verlor",    parf: "hat verloren",    fr: "perdre" },
+  { inf: "verschwinden", pres: "verschwindet", pret: "verschwand", parf: "ist verschwunden", fr: "disparaître" },
+  { inf: "wachsen",     pres: "wächst",      pret: "wuchs",     parf: "ist gewachsen",   fr: "grandir, pousser", star: true },
+  { inf: "waschen",     pres: "wäscht",      pret: "wusch",     parf: "hat gewaschen",   fr: "laver", star: true },
+  { inf: "werben",      pres: "wirbt",       pret: "warb",      parf: "hat geworben",    fr: "faire de la publicité", star: true },
+  { inf: "werfen",      pres: "wirft",       pret: "warf",      parf: "hat geworfen",    fr: "jeter", star: true },
+  { inf: "wissen",      pres: "weiß",        pret: "wusste",    parf: "hat gewusst",     fr: "savoir", star: true },
+  { inf: "ziehen",      pres: "zieht",       pret: "zog",       parf: "hat/ist gezogen", fr: "tirer, aller" },
+  // Ajouté à la main en bas de la page 131
+  { inf: "haben",       pres: "hat",         pret: "hatte",     parf: "hat gehabt",      fr: "avoir" }
 ];
 
 const LABELS = { inf: "Infinitif", pres: "Présent (3e pers.)", pret: "Prétérit", parf: "Parfait" };
@@ -269,14 +374,46 @@ const MODES = { forms: ["pres", "pret", "parf"], fr: ["inf", "pres", "pret", "pa
 const $ = id => document.getElementById(id);
 let mode, set, queue, current, status, checked, firstTry;
 
+const pron = v => v.pron || "er";
+
 // Liste de révision
 (function buildList() {
   let h = '<tr><th class="c-inf">Infinitif</th><th class="c-pres">Présent</th><th class="c-pret">Prétérit</th><th class="c-parf">Parfait</th><th class="c-fr">Traduction</th></tr>';
-  for (const v of VERBS) {
-    h += `<tr><td>${v.inf}</td><td>${v.star ? "*" : ""}er ${v.pres}</td><td>er ${v.pret}</td><td>er ${v.parf}</td><td>${v.fr}</td></tr>`;
-  }
+  VERBS.forEach((v, i) => {
+    h += `<tr><td><span class="num">${i + 1}</span>${v.inf}</td><td>${v.star ? "*" : ""}${pron(v)} ${v.pres}</td><td>${pron(v)} ${v.pret}</td><td>${pron(v)} ${v.parf}</td><td>${v.fr}</td></tr>`;
+  });
   $("list").innerHTML = h;
 })();
+
+// Séries : une par tranche de 10, toute la fiche, ou 20 verbes au hasard
+const SERIES = [];
+// Un reste de moins de 5 verbes est rattaché à la série précédente (ex. 81 à 93 plutôt que 91 à 93).
+for (let s = 0, e; s < VERBS.length; s = e) {
+  e = VERBS.length - (s + 10) < 5 ? VERBS.length : s + 10;
+  SERIES.push({ id: "s" + s, label: `${s + 1} à ${e}`, pick: () => [...VERBS.keys()].slice(s, e),
+    hint: `De <em>${VERBS[s].inf}</em> à <em>${VERBS[e - 1].inf}</em>.` });
+}
+SERIES.push({ id: "all", label: `Les ${VERBS.length}`, pick: () => [...VERBS.keys()],
+  hint: `Toute la fiche : ${VERBS.length} verbes.` });
+SERIES.push({ id: "rand", label: "20 au hasard", pick: () => shuffle([...VERBS.keys()]).slice(0, 20),
+  hint: "20 verbes tirés au hasard dans toute la fiche, différents à chaque fois." });
+
+const RANGE_KEY = "verbes-serie";
+let savedRange = null;
+try { savedRange = localStorage.getItem(RANGE_KEY); } catch (e) {}
+if (!SERIES.some(s => s.id === savedRange)) savedRange = SERIES[0].id;
+$("ranges").innerHTML = SERIES.map(s =>
+  `<label><input type="radio" name="range" value="${s.id}"${s.id === savedRange ? " checked" : ""}><span>${s.label}</span></label>`
+).join("");
+function showRangeHint() {
+  const id = document.querySelector('input[name="range"]:checked').value;
+  $("range-hint").innerHTML = SERIES.find(s => s.id === id).hint;
+}
+$("ranges").addEventListener("change", () => {
+  showRangeHint();
+  try { localStorage.setItem(RANGE_KEY, document.querySelector('input[name="range"]:checked').value); } catch (e) {}
+});
+showRangeHint();
 
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
@@ -291,11 +428,22 @@ function noUml(s) {
           .replace(/ä/g, "a").replace(/ö/g, "o").replace(/ü/g, "u").replace(/ß/g, "ss");
 }
 
+// Réponses acceptées pour un champ, normalisées. « hat/ist gezogen » accepte les deux auxiliaires.
+function answers(field, v) {
+  const out = [];
+  for (const a of [v[field], ...((v.alt && v.alt[field]) || [])]) {
+    const m = a.match(/^(hat|ist)\/(hat|ist) (.*)$/);
+    if (m) out.push(`${m[1]} ${m[3]}`, `${m[2]} ${m[3]}`);
+    out.push(a);
+  }
+  return out.map(norm);
+}
+
 function check(field, value, v) {
-  const got = norm(value), exp = v[field];
+  const got = norm(value), exps = answers(field, v), exp = exps[0];
   if (!got) return { ok: false, msg: "Réponse attendue : " + display(field, v) };
-  if (got === exp) return { ok: true };
-  if (noUml(got) === noUml(exp)) return { ok: false, msg: "Presque ! Attention à ä, ö, ü ou ß : " + display(field, v) };
+  if (exps.includes(got)) return { ok: true };
+  if (exps.some(e => noUml(e) === noUml(got))) return { ok: false, msg: "Presque ! Attention à ä, ö, ü ou ß : " + display(field, v) };
   if (field === "parf") {
     const [aux, ...rest] = exp.split(" ");
     const part = rest.join(" ");
@@ -306,13 +454,12 @@ function check(field, value, v) {
   }
   return { ok: false, msg: "Réponse attendue : " + display(field, v) };
 }
-function display(field, v) { return field === "inf" ? v.inf : "er " + v[field]; }
+function display(field, v) { return field === "inf" ? v.inf : pron(v) + " " + v[field]; }
 
 function start(m) {
   mode = m;
   const r = document.querySelector('input[name="range"]:checked').value;
-  const all = [...VERBS.keys()];
-  set = r === "a" ? all.slice(0, 10) : r === "b" ? all.slice(10, 20) : all;
+  set = SERIES.find(s => s.id === r).pick();
   queue = shuffle([...set]);
   status = VERBS.map(() => "todo");
   firstTry = VERBS.map(() => null);
@@ -323,6 +470,12 @@ function start(m) {
 }
 
 function renderProgress() {
+  // Au-delà de 30 verbes, les pastilles prendraient trop de place : un compteur suffit.
+  if (set.length > 30) {
+    const done = set.filter(i => status[i] === "done").length;
+    $("progress").innerHTML = `<span class="progress-text">${done} / ${set.length} verbes</span>`;
+    return;
+  }
   $("progress").innerHTML = set.map(i =>
     `<span class="dot ${status[i] === "done" ? "done" : firstTry[i] === false ? "missed" : ""} ${i === current ? "current" : ""}" title="${VERBS[i].inf}"></span>`
   ).join("");
@@ -339,7 +492,7 @@ function next() {
   $("fields").innerHTML = MODES[mode].map(f => `
     <div class="field f-${f}" data-field="${f}">
       <label for="in-${f}">${LABELS[f]}</label>
-      <div class="row">${f === "inf" ? "" : '<span class="pron">er</span>'}
+      <div class="row">${f === "inf" ? "" : `<span class="pron">${pron(v)}</span>`}
         <input id="in-${f}" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="next">
       </div>
       <div class="fb"></div>
@@ -410,8 +563,45 @@ function finish() {
     "Relis la liste puis réessaie : ça rentre à force de répéter.";
   const missed = set.filter(i => !firstTry[i]).map(i => VERBS[i]);
   $("missed").innerHTML = missed.length
-    ? "<p>À revoir :</p><ul>" + missed.map(v => `<li><strong>${v.inf}</strong> – er ${v.pres}, er ${v.pret}, er ${v.parf}</li>`).join("") + "</ul>"
+    ? "<p>À revoir :</p><ul>" + missed.map(v => `<li><strong>${v.inf}</strong> – ${pron(v)} ${v.pres}, ${pron(v)} ${v.pret}, ${pron(v)} ${v.parf}</li>`).join("") + "</ul>"
     : "";
+  // Cadeau à partir de 80 % de verbes justes du premier coup, sinon un encouragement.
+  const needed = Math.ceil(n * 4 / 5);
+  if (good >= needed) showGift();
+  else $("gift").innerHTML = `
+    <p class="gift-title">🎁 Un <span class="hl">cadeau</span> t’attend…</p>
+    <p>… à partir de ${needed} / ${n} verbes justes du premier coup (80 %). Il t’en manque ${needed - good}. Refais un tour !</p>`;
+}
+
+// Cadeau : une vidéo Karambolage tirée au hasard dans karambolage.js, parmi celles encore en ligne.
+// Le lecteur ARTE n'est chargé qu'au clic : rien ne se lance ni ne se télécharge tout seul.
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+function showGift() {
+  const today = new Date().toISOString().slice(0, 10);
+  const list = (typeof KARAMBOLAGE === "undefined" ? [] : KARAMBOLAGE).filter(v => v[4] > today);
+  if (!list.length) {
+    $("gift").innerHTML = `
+      <p class="gift-title">🎁 Ton <span class="hl">cadeau</span></p>
+      <p>Va voir les vidéos de <a href="https://www.arte.tv/fr/videos/RC-014034/karambolage/" target="_blank" rel="noopener"><em>Karambolage</em> sur arte.tv</a>.</p>`;
+    return;
+  }
+  const [id, label, title, img] = list[Math.floor(Math.random() * list.length)];
+  const t = esc(title);
+  $("gift").innerHTML = `
+    <p class="gift-title">🎁 Ton <span class="hl">cadeau</span></p>
+    <p>Une vidéo de <em>Karambolage</em>, l’émission d’ARTE qui s’amuse des petites différences entre les pays. Il y en a ${list.length}, une nouvelle à chaque fois !</p>
+    <button class="gift-video" type="button" id="gift-play" style="background-image:url('https://api-cdn.arte.tv/img/v2/image/${img}/640x360')" aria-label="Regarder la vidéo : ${t}"></button>
+    <p class="gift-label">${esc(KARAMBOLAGE_LABELS[label])}</p>
+    <p class="gift-name">${t}</p>
+    <a class="gift-link" href="https://www.arte.tv/fr/videos/${id}/" target="_blank" rel="noopener">Regarder sur arte.tv</a>`;
+  $("gift-play").addEventListener("click", () => {
+    const f = document.createElement("iframe");
+    f.src = `https://www.arte.tv/embeds/fr/${id}?autoplay=true`;
+    f.title = "Karambolage – " + title;
+    f.allow = "autoplay; fullscreen; picture-in-picture";
+    f.allowFullscreen = true;
+    $("gift-play").replaceWith(f);
+  });
 }
 
 document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => start(b.dataset.mode)));
@@ -419,6 +609,19 @@ $("action").addEventListener("click", action);
 $("again").addEventListener("click", () => start(mode));
 $("home-btn").addEventListener("click", () => { $("result").classList.add("hidden"); $("home").classList.remove("hidden"); });
 $("quit").addEventListener("click", () => { $("quiz").classList.add("hidden"); $("home").classList.remove("hidden"); });
+
+// Aperçu de l'écran de fin sans faire le quiz : ajouter ?apercu à l'adresse (8 / 10),
+// ou ?apercu=6 pour choisir le nombre de verbes justes sur la série 1 à 10.
+const apercu = new URLSearchParams(location.search).get("apercu");
+if (apercu !== null) {
+  const good = /^\d+$/.test(apercu) ? Math.min(+apercu, 10) : 8;
+  mode = "forms";
+  set = [...VERBS.keys()].slice(0, 10);
+  status = VERBS.map(() => "done");
+  firstTry = VERBS.map((_, i) => i < good);
+  $("home").classList.add("hidden");
+  finish();
+}
 
 // Touches ä ö ü ß : insèrent dans le champ actif sans lui faire perdre le focus
 let lastInput = null;
