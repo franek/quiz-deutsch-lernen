@@ -59,10 +59,6 @@ p.lead { color: var(--muted); margin: 0 0 1.5rem; }
 .modes { display: grid; gap: .75rem; }
 .range-title { font-weight: 500; margin: 0 0 .5rem; }
 .range { display: flex; gap: .5rem; margin: 0 0 .6rem; flex-wrap: wrap; }
-.gift-pill {
-  display: inline-block; margin: -.75rem 0 1.5rem; padding: .45rem .9rem; border-radius: 14px;
-  background: var(--violet); font-size: .95rem; line-height: 1.4;
-}
 .range-hint { color: var(--muted); font-size: .95rem; margin: 0 0 1.25rem; min-height: 1.5em; }
 .progress-text { color: var(--muted); font-weight: 500; }
 .num { display: inline-block; min-width: 1.8em; color: var(--muted); font-size: .85em; }
@@ -175,25 +171,6 @@ tr:last-child td { border-bottom: 0; }
 .result li { margin-bottom: .3rem; }
 .btns { display: grid; gap: .6rem; margin-top: 1.4rem; }
 
-.gift { margin-top: 1.4rem; padding-top: 1.2rem; border-top: 2px dashed var(--line); }
-.gift-title { font-weight: 700; font-size: 1.15rem; margin: 0 0 .2rem; }
-.gift-title .hl { background: linear-gradient(transparent 55%, var(--violet) 55%); padding: 0 .15em; }
-.gift p { margin: 0 0 .8rem; color: var(--muted); }
-.gift-video {
-  position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; padding: 0; overflow: hidden;
-  border: 0; border-radius: 12px; background: #000 center / cover no-repeat; cursor: pointer;
-}
-.gift-video::after {
-  content: "▶"; position: absolute; inset: 0; margin: auto; width: 68px; height: 68px; border-radius: 50%;
-  display: grid; place-items: center; padding-left: 5px; font-size: 1.7rem;
-  background: rgba(255,255,255,.92); color: #1E2A44; box-shadow: 0 2px 12px rgba(0,0,0,.35);
-}
-.gift-video:hover::after { transform: scale(1.06); }
-.gift-video:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
-.gift iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 12px; background: #000; }
-.gift-label { margin: .6rem 0 0 !important; font-size: .8rem; font-weight: 500; text-transform: uppercase; letter-spacing: .05em; }
-.gift-name { font-weight: 500; margin: .1rem 0 0; color: var(--ink) !important; }
-.gift-link { font-size: .9rem; color: var(--muted); }
 .second-btn {
   width: 100%; font: inherit; font-weight: 500; padding: .8rem 1rem; border-radius: 12px;
   border: 2px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer;
@@ -203,6 +180,7 @@ tr:last-child td { border-bottom: 0; }
   @keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 }
 </style>
+<link rel="stylesheet" href="../commun/cadeau.css">
 </head>
 <body>
 <main>
@@ -265,7 +243,8 @@ tr:last-child td { border-bottom: 0; }
   </section>
 
 </main>
-<script src="karambolage.js"></script>
+<script src="../commun/karambolage.js"></script>
+<script src="../commun/cadeau.js"></script>
 <script>
 const VERBS = [
   // Page 130
@@ -565,43 +544,7 @@ function finish() {
   $("missed").innerHTML = missed.length
     ? "<p>À revoir :</p><ul>" + missed.map(v => `<li><strong>${v.inf}</strong> – ${pron(v)} ${v.pres}, ${pron(v)} ${v.pret}, ${pron(v)} ${v.parf}</li>`).join("") + "</ul>"
     : "";
-  // Cadeau à partir de 80 % de verbes justes du premier coup, sinon un encouragement.
-  const needed = Math.ceil(n * 4 / 5);
-  if (good >= needed) showGift();
-  else $("gift").innerHTML = `
-    <p class="gift-title">🎁 Un <span class="hl">cadeau</span> t’attend…</p>
-    <p>… à partir de ${needed} / ${n} verbes justes du premier coup (80 %). Il t’en manque ${needed - good}. Refais un tour !</p>`;
-}
-
-// Cadeau : une vidéo Karambolage tirée au hasard dans karambolage.js, parmi celles encore en ligne.
-// Le lecteur ARTE n'est chargé qu'au clic : rien ne se lance ni ne se télécharge tout seul.
-const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
-function showGift() {
-  const today = new Date().toISOString().slice(0, 10);
-  const list = (typeof KARAMBOLAGE === "undefined" ? [] : KARAMBOLAGE).filter(v => v[4] > today);
-  if (!list.length) {
-    $("gift").innerHTML = `
-      <p class="gift-title">🎁 Ton <span class="hl">cadeau</span></p>
-      <p>Va voir les vidéos de <a href="https://www.arte.tv/fr/videos/RC-014034/karambolage/" target="_blank" rel="noopener"><em>Karambolage</em> sur arte.tv</a>.</p>`;
-    return;
-  }
-  const [id, label, title, img] = list[Math.floor(Math.random() * list.length)];
-  const t = esc(title);
-  $("gift").innerHTML = `
-    <p class="gift-title">🎁 Ton <span class="hl">cadeau</span></p>
-    <p>Une vidéo de <em>Karambolage</em>, l’émission d’ARTE qui s’amuse des petites différences entre les pays. Il y en a ${list.length}, une nouvelle à chaque fois !</p>
-    <button class="gift-video" type="button" id="gift-play" style="background-image:url('https://api-cdn.arte.tv/img/v2/image/${img}/640x360')" aria-label="Regarder la vidéo : ${t}"></button>
-    <p class="gift-label">${esc(KARAMBOLAGE_LABELS[label])}</p>
-    <p class="gift-name">${t}</p>
-    <a class="gift-link" href="https://www.arte.tv/fr/videos/${id}/" target="_blank" rel="noopener">Regarder sur arte.tv</a>`;
-  $("gift-play").addEventListener("click", () => {
-    const f = document.createElement("iframe");
-    f.src = `https://www.arte.tv/embeds/fr/${id}?autoplay=true`;
-    f.title = "Karambolage – " + title;
-    f.allow = "autoplay; fullscreen; picture-in-picture";
-    f.allowFullscreen = true;
-    $("gift-play").replaceWith(f);
-  });
+  cadeau($("gift"), good, n, "verbes");
 }
 
 document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => start(b.dataset.mode)));

@@ -4,7 +4,7 @@ Page web d'entraînement aux verbes forts et faibles irréguliers allemands, pou
 
 ## Utilisation
 
-Tout tient dans `index.html` (HTML, CSS et JS inline, sans build ni dépendance), plus `karambolage.js`, la liste des vidéos offertes en fin de quiz. Pour l'utiliser, on peut l'ouvrir directement dans un navigateur ou le servir en local :
+Tout tient dans `index.html` (HTML, CSS et JS inline, sans build ni dépendance), plus le cadeau de fin de quiz, commun à tous les quiz, dans `../commun/`. Pour l'utiliser, on peut l'ouvrir directement dans un navigateur ou le servir en local :
 
 ```bash
 python3 -m http.server
@@ -22,7 +22,7 @@ L'élève choisit d'abord la série, puis l'exercice :
 
 Les verbes sont tirés au hasard. Un verbe raté revient en fin de file jusqu'à ce qu'il soit juste. Le score final ne compte que les verbes réussis du premier coup, et liste ceux à revoir. Au-delà de 30 verbes, la barre de pastilles est remplacée par un compteur.
 
-À la fin, si au moins 80 % des verbes sont justes du premier coup, un **cadeau** : une vidéo de *Karambolage* (ARTE), tirée au hasard parmi les 598 de `karambolage.js`. En dessous de 80 %, un message indique combien de verbes il manquait pour l'obtenir. Le lecteur ARTE n'est chargé qu'au clic sur la vignette, et un lien permet de regarder la vidéo sur arte.tv.
+À la fin, si au moins 80 % des verbes sont justes du premier coup, un **cadeau** : une vidéo de *Karambolage* (ARTE), tirée au hasard parmi les 598 de `../commun/karambolage.js`. En dessous de 80 %, un message indique combien de verbes il manquait pour l'obtenir. Le lecteur ARTE n'est chargé qu'au clic sur la vignette, et un lien permet de regarder la vidéo sur arte.tv.
 
 Pour voir l'écran de fin sans faire le quiz, ajouter `?apercu` à l'adresse (ex. `https://nicht.dume.me/unregelmaessige-verben/?apercu`) : il s'affiche avec un score d'exemple de 8 / 10, donc avec le cadeau. `?apercu=7` montre 7 / 10, sans le cadeau.
 
@@ -36,7 +36,7 @@ Le pronom (« er », ou « es » pour *gelingen* et *geschehen*) est affiché de
   - `pron` : pronom, si ce n'est pas « er » ;
   - `alt` : autres réponses acceptées, par champ (ex. `alt: { inf: ["Sport treiben"] }`).
   Un parfait écrit `hat/ist …` accepte les deux auxiliaires.
-- `karambolage.js` : `KARAMBOLAGE`, vidéos offertes en fin de quiz, au format `[identifiant ARTE, étiquette, titre, image, fin de diffusion]`, et `KARAMBOLAGE_LABELS`, les étiquettes (« Émission complète », « La langue »…). Générée le 17/11/2026 à partir de la liste des programId de Karambolage et de l'API du lecteur ARTE (`https://api.arte.tv/api/player/v2/config/fr/<id>`) : on n'a gardé que les vidéos jouables et intégrables. La page écarte d'elle-même les vidéos dont la fin de diffusion est passée. S'il n'en reste plus aucune, elle affiche un lien vers Karambolage sur arte.tv.
+- `../commun/karambolage.js` : `KARAMBOLAGE`, vidéos offertes en fin de quiz, au format `[identifiant ARTE, étiquette, titre, image, fin de diffusion]`, et `KARAMBOLAGE_LABELS`, les étiquettes (« Émission complète », « La langue »…). Générée le 17/11/2026 à partir de la liste des programId de Karambolage et de l'API du lecteur ARTE (`https://api.arte.tv/api/player/v2/config/fr/<id>`) : on n'a gardé que les vidéos jouables et intégrables. La page écarte d'elle-même les vidéos dont la fin de diffusion est passée. S'il n'en reste plus aucune, elle affiche un lien vers Karambolage sur arte.tv.
 - `SERIES` : séries proposées, générées à partir de `VERBS`.
 - `MODES` : champs demandés pour chaque exercice.
 - `answers(field, verb)` et `check(field, value, verb)` : réponses acceptées et correction.
