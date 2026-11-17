@@ -4,7 +4,7 @@ Petits quiz web pour réviser l'allemand au collège. Pages statiques (HTML, CSS
 
 - `index.html` : page d'accueil, liste des quiz.
 - [`unregelmaessige-verben/`](unregelmaessige-verben/) : verbes irréguliers (*unregelmäßige Verben*). Détails dans son README.
-- [`vocabulaire/`](vocabulaire/) : vocabulaire du cahier, par thème. Détails dans son README.
+- [`wortschatz/`](wortschatz/) : vocabulaire du cahier, par thème. Détails dans son README.
 - `commun/` : le cadeau de fin de quiz, partagé par tous les quiz (`cadeau.js`, `cadeau.css` et la liste des vidéos `karambolage.js`).
 
 Pour tester en local :

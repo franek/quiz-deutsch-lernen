@@ -10,7 +10,7 @@ Tout tient dans `index.html` (HTML, CSS et JS inline, sans build ni dépendance)
 python3 -m http.server
 ```
 
-puis ouvrir http://localhost:8000/vocabulaire/.
+puis ouvrir http://localhost:8000/wortschatz/.
 
 ## Fonctionnement
 
