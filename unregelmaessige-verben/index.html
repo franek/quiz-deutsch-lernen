@@ -565,7 +565,12 @@ function finish() {
   $("missed").innerHTML = missed.length
     ? "<p>À revoir :</p><ul>" + missed.map(v => `<li><strong>${v.inf}</strong> – ${pron(v)} ${v.pres}, ${pron(v)} ${v.pret}, ${pron(v)} ${v.parf}</li>`).join("") + "</ul>"
     : "";
-  showGift();
+  // Cadeau à partir de 80 % de verbes justes du premier coup, sinon un encouragement.
+  const needed = Math.ceil(n * 4 / 5);
+  if (good >= needed) showGift();
+  else $("gift").innerHTML = `
+    <p class="gift-title">🎁 Un <span class="hl">cadeau</span> t’attend…</p>
+    <p>… à partir de ${needed} / ${n} verbes justes du premier coup (80 %). Il t’en manque ${needed - good}. Refais un tour !</p>`;
 }
 
 // Le lecteur ARTE n'est chargé qu'au clic : rien ne se lance ni ne se télécharge tout seul.
@@ -594,13 +599,15 @@ $("again").addEventListener("click", () => start(mode));
 $("home-btn").addEventListener("click", () => { $("result").classList.add("hidden"); $("home").classList.remove("hidden"); });
 $("quit").addEventListener("click", () => { $("quiz").classList.add("hidden"); $("home").classList.remove("hidden"); });
 
-// Aperçu de l'écran de fin sans faire le quiz : ajouter ?apercu à l'adresse.
-// Score d'exemple sur la série 1 à 10, avec deux verbes à revoir.
-if (new URLSearchParams(location.search).has("apercu")) {
+// Aperçu de l'écran de fin sans faire le quiz : ajouter ?apercu à l'adresse (8 / 10),
+// ou ?apercu=6 pour choisir le nombre de verbes justes sur la série 1 à 10.
+const apercu = new URLSearchParams(location.search).get("apercu");
+if (apercu !== null) {
+  const good = /^\d+$/.test(apercu) ? Math.min(+apercu, 10) : 8;
   mode = "forms";
   set = [...VERBS.keys()].slice(0, 10);
   status = VERBS.map(() => "done");
-  firstTry = VERBS.map((_, i) => i !== 2 && i !== 6);
+  firstTry = VERBS.map((_, i) => i < good);
   $("home").classList.add("hidden");
   finish();
 }

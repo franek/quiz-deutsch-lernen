@@ -22,9 +22,9 @@ L'élève choisit d'abord la série, puis l'exercice :
 
 Les verbes sont tirés au hasard. Un verbe raté revient en fin de file jusqu'à ce qu'il soit juste. Le score final ne compte que les verbes réussis du premier coup, et liste ceux à revoir. Au-delà de 30 verbes, la barre de pastilles est remplacée par un compteur.
 
-À la fin, un **cadeau** : un épisode de *Karambolage* (ARTE), tiré au hasard dans `GIFTS`. Le lecteur ARTE n'est chargé qu'au clic sur la vignette, et un lien permet de regarder la vidéo sur arte.tv.
+À la fin, si au moins 80 % des verbes sont justes du premier coup, un **cadeau** : un épisode de *Karambolage* (ARTE), tiré au hasard dans `GIFTS`. En dessous de 80 %, un message indique combien de verbes il manquait pour l'obtenir. Le lecteur ARTE n'est chargé qu'au clic sur la vignette, et un lien permet de regarder la vidéo sur arte.tv.
 
-Pour voir l'écran de fin sans faire le quiz, ajouter `?apercu` à l'adresse (ex. `https://nicht.dume.me/unregelmaessige-verben/?apercu`) : il s'affiche avec un score d'exemple de 8 / 10.
+Pour voir l'écran de fin sans faire le quiz, ajouter `?apercu` à l'adresse (ex. `https://nicht.dume.me/unregelmaessige-verben/?apercu`) : il s'affiche avec un score d'exemple de 8 / 10, donc avec le cadeau. `?apercu=7` montre 7 / 10, sans le cadeau.
 
 Le pronom (« er », ou « es » pour *gelingen* et *geschehen*) est affiché devant les champs. L'élève peut le retaper ou non, les deux sont acceptés.
 
