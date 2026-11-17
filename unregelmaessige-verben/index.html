@@ -170,6 +170,25 @@ tr:last-child td { border-bottom: 0; }
 .result ul { padding-left: 1.2rem; }
 .result li { margin-bottom: .3rem; }
 .btns { display: grid; gap: .6rem; margin-top: 1.4rem; }
+
+.gift { margin-top: 1.4rem; padding-top: 1.2rem; border-top: 2px dashed var(--line); }
+.gift-title { font-weight: 700; font-size: 1.15rem; margin: 0 0 .2rem; }
+.gift-title .hl { background: linear-gradient(transparent 55%, var(--violet) 55%); padding: 0 .15em; }
+.gift p { margin: 0 0 .8rem; color: var(--muted); }
+.gift-video {
+  position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; padding: 0; overflow: hidden;
+  border: 0; border-radius: 12px; background: #000 center / cover no-repeat; cursor: pointer;
+}
+.gift-video::after {
+  content: "▶"; position: absolute; inset: 0; margin: auto; width: 68px; height: 68px; border-radius: 50%;
+  display: grid; place-items: center; padding-left: 5px; font-size: 1.7rem;
+  background: rgba(255,255,255,.92); color: #1E2A44; box-shadow: 0 2px 12px rgba(0,0,0,.35);
+}
+.gift-video:hover::after { transform: scale(1.06); }
+.gift-video:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+.gift iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 12px; background: #000; }
+.gift-name { font-weight: 500; margin: .6rem 0 0; color: var(--ink) !important; }
+.gift-link { font-size: .9rem; color: var(--muted); }
 .second-btn {
   width: 100%; font: inherit; font-weight: 500; padding: .8rem 1rem; border-radius: 12px;
   border: 2px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer;
@@ -231,6 +250,7 @@ tr:last-child td { border-bottom: 0; }
       <div class="score" id="score"></div>
       <p id="comment"></p>
       <div id="missed"></div>
+      <div id="gift" class="gift"></div>
       <div class="btns">
         <button class="main-btn" id="again">Recommencer</button>
         <button class="second-btn" id="home-btn">Changer d’exercice</button>
@@ -339,6 +359,13 @@ const VERBS = [
   { inf: "ziehen",      pres: "zieht",       pret: "zog",       parf: "hat/ist gezogen", fr: "tirer, aller" },
   // Ajouté à la main en bas de la page 131
   { inf: "haben",       pres: "hat",         pret: "hatte",     parf: "hat gehabt",      fr: "avoir" }
+];
+
+// Cadeaux de fin de quiz : vidéos Karambolage (ARTE). Pour en ajouter une, recopier l'identifiant
+// de l'adresse arte.tv (ex. 133252-007-A) et l'image og:image de la page, en taille 640x360.
+const GIFTS = [
+  { id: "133252-007-A", title: "Poubelle / Faire fuir un animal / Zwanzigeins",
+    img: "https://api-cdn.arte.tv/img/v2/image/NPycvZQ2DBJS7r49RiXN7k/640x360" }
 ];
 
 const LABELS = { inf: "Infinitif", pres: "Présent (3e pers.)", pret: "Prétérit", parf: "Parfait" };
@@ -538,6 +565,27 @@ function finish() {
   $("missed").innerHTML = missed.length
     ? "<p>À revoir :</p><ul>" + missed.map(v => `<li><strong>${v.inf}</strong> – ${pron(v)} ${v.pres}, ${pron(v)} ${v.pret}, ${pron(v)} ${v.parf}</li>`).join("") + "</ul>"
     : "";
+  showGift();
+}
+
+// Le lecteur ARTE n'est chargé qu'au clic : rien ne se lance ni ne se télécharge tout seul.
+function showGift() {
+  const g = GIFTS[Math.floor(Math.random() * GIFTS.length)];
+  const page = `https://www.arte.tv/fr/videos/${g.id}/karambolage/`;
+  $("gift").innerHTML = `
+    <p class="gift-title">🎁 Ton <span class="hl">cadeau</span></p>
+    <p>Un épisode de <em>Karambolage</em>, l’émission d’ARTE sur les petites différences entre la France et l’Allemagne.</p>
+    <button class="gift-video" type="button" id="gift-play" style="background-image:url('${g.img}')" aria-label="Regarder la vidéo : ${g.title}"></button>
+    <p class="gift-name">${g.title}</p>
+    <a class="gift-link" href="${page}" target="_blank" rel="noopener">Regarder sur arte.tv</a>`;
+  $("gift-play").addEventListener("click", () => {
+    const f = document.createElement("iframe");
+    f.src = `https://www.arte.tv/embeds/fr/${g.id}?autoplay=true`;
+    f.title = "Karambolage – " + g.title;
+    f.allow = "autoplay; fullscreen; picture-in-picture";
+    f.allowFullscreen = true;
+    $("gift-play").replaceWith(f);
+  });
 }
 
 document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => start(b.dataset.mode)));

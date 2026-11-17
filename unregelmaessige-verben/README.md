@@ -22,6 +22,8 @@ L'élève choisit d'abord la série, puis l'exercice :
 
 Les verbes sont tirés au hasard. Un verbe raté revient en fin de file jusqu'à ce qu'il soit juste. Le score final ne compte que les verbes réussis du premier coup, et liste ceux à revoir. Au-delà de 30 verbes, la barre de pastilles est remplacée par un compteur.
 
+À la fin, un **cadeau** : un épisode de *Karambolage* (ARTE), tiré au hasard dans `GIFTS`. Le lecteur ARTE n'est chargé qu'au clic sur la vignette, et un lien permet de regarder la vidéo sur arte.tv.
+
 Le pronom (« er », ou « es » pour *gelingen* et *geschehen*) est affiché devant les champs. L'élève peut le retaper ou non, les deux sont acceptés.
 
 ## Structure du code
@@ -32,6 +34,7 @@ Le pronom (« er », ou « es » pour *gelingen* et *geschehen*) est affiché de
   - `pron` : pronom, si ce n'est pas « er » ;
   - `alt` : autres réponses acceptées, par champ (ex. `alt: { inf: ["Sport treiben"] }`).
   Un parfait écrit `hat/ist …` accepte les deux auxiliaires.
+- `GIFTS` : vidéos offertes en fin de quiz. Chaque entrée contient l'identifiant ARTE (`id`, ex. `133252-007-A`, tiré de l'adresse arte.tv), le titre (`title`) et la vignette (`img`, image `og:image` de la page en 640x360).
 - `SERIES` : séries proposées, générées à partir de `VERBS`.
 - `MODES` : champs demandés pour chaque exercice.
 - `answers(field, verb)` et `check(field, value, verb)` : réponses acceptées et correction.
