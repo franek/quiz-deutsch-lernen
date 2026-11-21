@@ -9,7 +9,7 @@ Petits quiz web pour réviser l'allemand au collège. Pages statiques (HTML, CSS
 
 ## La neige
 
-`commun/neige.js` fait tomber de la neige sur chaque page qui le charge. Les flocons sont dessinés sur un calque transparent qui ne bloque aucun clic, en bleu glacier sur fond clair et en blanc sur fond sombre. Un bouton ❄️ en bas à droite l'arrête ou la relance, et le choix est mémorisé dans le navigateur. La neige est coupée par défaut si l'appareil demande de réduire les animations, et se met en pause quand l'onglet est caché. Pour la retirer du site, il suffit d'enlever la ligne `<script src="…/commun/neige.js"></script>` en bas de chaque page.
+`commun/neige.js` fait tomber de la neige sur chaque page qui le charge. Les flocons sont dessinés sur un calque transparent qui ne bloque aucun clic, en bleu glacier sur fond clair et en blanc sur fond sombre. Elle est désactivée par défaut : un bouton ❄️ en bas à droite la lance ou l'arrête, et le choix est mémorisé dans le navigateur. Elle se met en pause quand l'onglet est caché. Pour la retirer du site, il suffit d'enlever la ligne `<script src="…/commun/neige.js"></script>` en bas de chaque page.
 
 Pour tester en local :
 

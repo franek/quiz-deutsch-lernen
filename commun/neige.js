@@ -1,13 +1,11 @@
 // Neige qui tombe sur le site, commune à toutes les pages.
 // - Calque transparent par-dessus la page : il ne bloque aucun clic.
-// - Bouton ❄️ en bas à droite pour l'arrêter ou la relancer ; le choix est mémorisé.
-// - Désactivée par défaut si l'appareil demande de réduire les animations.
+// - Désactivée par défaut : le bouton ❄️ en bas à droite la lance ou l'arrête, et le choix est mémorisé.
 // - En pause quand l'onglet est caché, pour ne pas consommer de batterie.
 (function () {
   const KEY = "neige";
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let on = !reduce;
-  try { const v = localStorage.getItem(KEY); if (v !== null) on = v === "1"; } catch (e) {}
+  let on = false;
+  try { on = localStorage.getItem(KEY) === "1"; } catch (e) {}
 
   const style = document.createElement("style");
   style.textContent = `
