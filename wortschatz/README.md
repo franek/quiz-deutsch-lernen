@@ -1,6 +1,6 @@
 # Vocabulaire – der Wortschatz
 
-Page web d'entraînement au vocabulaire allemand, pour un élève de collège. Elle reprend les mots de son cahier (classe de 6e3), soit 59 mots ou expressions, rangés par thème.
+Page web d'entraînement au vocabulaire allemand, pour un élève de collège. Elle reprend les mots de son cahier (classe de 6e3), soit 84 mots ou expressions, rangés par thème.
 
 ## Utilisation
 
@@ -28,8 +28,10 @@ Pour voir l'écran de fin sans faire le quiz, ajouter `?apercu` à l'adresse : 1
 - 🌊 Au bord de la mer (12 mots)
 - 👻 Fantômes et frissons (12)
 - 🏠 À la maison (13)
-- 🙂 Caractère et humeur (15)
-- 🧩 Et aussi… (7)
+- 🙂 Caractère et humeur (19)
+- 🧭 Objets d’aventure (7)
+- 🗣️ Verbes et expressions (12)
+- 🧩 Et aussi… (9)
 
 ## Structure du code
 
@@ -40,13 +42,14 @@ Pour voir l'écran de fin sans faire le quiz, ajouter `?apercu` à l'adresse : 1
 
 ## Choix faits
 
-- **Source des données** : mots recopiés du cahier de l'élève, dans leur orthographe correcte (*Gespenst*, *Mond*, *Felsen*, *Schrecken*…). Les photos du cahier ne sont pas versionnées (`.gitignore`). Traductions ajoutées quand le cahier n'en donnait pas : *der Wind heult* (le vent hurle), *es geistert* (il y a des fantômes), *grübeln* (ruminer, se creuser la tête ; le cahier l'explique en allemand par *viel nachdenken*).
+- **Source des données** : mots recopiés du cahier de l'élève, dans leur orthographe correcte (*Gespenst*, *Mond*, *Felsen*, *Schrecken*…). Les photos du cahier (et le zip qui les a apportées) ne sont pas versionnées (`.gitignore`). Traductions ajoutées quand le cahier n'en donnait pas : *der Wind heult* (le vent hurle), *es geistert* (il y a des fantômes), *grübeln* (ruminer, se creuser la tête ; le cahier l'explique en allemand par *viel nachdenken*).
 - **Deux sens, deux façons de répondre** : allemand → français en choix multiple, parce qu'une traduction française tapée a trop de variantes pour être corrigée de façon fiable ; français → allemand à écrire, pour travailler l'orthographe et les articles.
 - **Correction de l'écrit** :
   - un article manquant ou faux est signalé comme tel (« Il manque l'article », « Mauvais article ») ;
   - une réponse juste à un tréma ou un ß près est comptée fausse avec un message « Presque ! » ;
   - une majuscule oubliée sur un nom est acceptée, avec un rappel. Exception : *Sie* (vous), où la majuscule change le sens ;
   - quand plusieurs formes sont acceptées (*das Meer / die See*, *gleich / sofort*…), une seule suffit, mais on peut aussi les écrire toutes.
+- **Corrections du cahier** : *die Steinschleuder* (le lance-pierre) est féminin, alors que le cahier écrit « der ». *saufen* est traduit par « se soûler ».
 - **Pièges signalés** : *die See* (la mer) / *der See* (le lac), *zahlen* (payer) / *zählen* (compter), *spuken* (hanter) / *spucken* (cracher).
 - **Doublons de sens fusionnés** : *es spukt* et *es geistert* (il y a des fantômes) forment un seul mot, avec les deux réponses acceptées.
 
